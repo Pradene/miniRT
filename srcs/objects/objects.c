@@ -86,32 +86,6 @@ int ambient_light(char **args)
     return (1);
 }
 
-int check_camera(t_camera camera)
-{
-    if (!check_fov(camera.fov) || !check_direction(camera.direction))
-        return (0);
-    return (1);
-}
-
-int camera(char **args)
-{
-    t_data  *data;
-    char    *tmp;
-
-    data = get_data();
-    if (string_array_size(args) != 4)
-        return (0);
-    if (data->camera.created)
-        return (0);
-    data->camera.position = atov4(args[1], false);
-    data->camera.direction = atov4(args[2], true);
-    data->camera.fov = (int)ft_atof(args[3], &tmp);
-    data->camera.created = 1;
-    if (!check_camera(data->camera))
-        return (0);
-    return (1);
-}
-
 int check_light(t_light light)
 {
     if (!check_color(light.color) || !check_brightness(light.brightness))
@@ -129,7 +103,7 @@ int light(char **args)
         return (0);
     if (data->light.created)
         return (0);
-    data->light.position = atov4(args[1], false);
+    data->light.origin = atov4(args[1], false);
     data->light.brightness = ft_atof(args[2], &tmp);
     data->light.color = atocolor(args[3]);
     data->light.created = 1;
@@ -152,7 +126,7 @@ int sphere(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = SPHERE;
-    obj->object.position = atov4(args[1], false);
+    obj->object.origin = atov4(args[1], false);
     obj->object.diameter = ft_atof(args[2], &tmp);
     obj->object.color = atocolor(args[3]);
     add_objects(&data->objects, obj);
@@ -172,7 +146,7 @@ int plane(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = PLANE;
-    obj->object.position = atov4(args[1], false);
+    obj->object.origin = atov4(args[1], false);
     obj->object.rotation = atov4(args[2], true);
     obj->object.color = atocolor(args[3]);
     add_objects(&data->objects, obj);
@@ -193,7 +167,7 @@ int cylinder(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = CYLINDER;
-    obj->object.position = atov4(args[1], false);
+    obj->object.origin = atov4(args[1], false);
     obj->object.rotation = atov4(args[2], true);
     obj->object.diameter = ft_atof(args[3], &tmp);
     obj->object.height = ft_atof(args[4], &tmp);

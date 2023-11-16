@@ -33,3 +33,17 @@ t_color color(float r, float g, float b, float a)
     c.a = a;
     return (c);
 }
+
+// transform a t_color struct into an integer color
+int rgba_to_color(t_color c)
+{
+    int color;
+
+    c.r = clamp(c.r, 0.0, 1.0);
+    c.g = clamp(c.g, 0.0, 1.0);
+    c.b = clamp(c.b, 0.0, 1.0);
+    c.a = clamp(c.a, 0.0, 1.0);
+    color = ((int)(c.a * 255) << 24) | ((int)(c.r * 255) << 16) \
+    | ((int)(c.g * 255) << 8) | ((int)(c.b * 255) << 0);
+    return (color);
+}

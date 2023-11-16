@@ -23,13 +23,14 @@ t_color get_color(t_obj obj, t_ray ray, float t)
     float       ratio;
 
     data = get_data();
-    hp = vector_substract(ray.position, obj.position);
+    hp = vector_substract(ray.origin, obj.origin);
     hp = vector_add(hp, vector_multiply(ray.direction, t));
     vector_normalize(&hp);
-    dir = vector_add(hp, obj.position);
-    dir = vector_substract(dir, data->light.position);
-    ray.position = vector_add(obj.position, vector_multiply(hp, 1.001));
-    ray.direction = vector_substract(ray.position, data->light.position);
+    dir = vector_add(hp, obj.origin);
+    dir = vector_substract(dir, data->light.origin);
+    vector_normalize(&dir);
+    ray.origin = vector_add(obj.origin, vector_multiply(hp, 1.0001));
+    ray.direction = vector_substract(ray.origin, data->light.origin);
     ray.direction = vector_multiply(ray.direction, -1);
     vector_normalize(&ray.direction);
     if (rayHit(ray))
@@ -40,10 +41,10 @@ t_color get_color(t_obj obj, t_ray ray, float t)
         return (c);
     }
     ratio = max(0.0, vector_dot(hp, vector_multiply(dir, -1)));
-    c.r *= min(1.0, ratio + data->alight.brightness);
-    c.g *= min(1.0, ratio + data->alight.brightness);
-    c.b *= min(1.0, ratio + data->alight.brightness);
-    return (obj.color);
+    c.r = obj.color.r * min(1.0, ratio + data->alight.brightness);
+    c.g = obj.color.g * min(1.0, ratio + data->alight.brightness);
+    c.b = obj.color.b * min(1.0, ratio + data->alight.brightness);
+    return (c);
 }
 
 float   ray_sphere_intersection(t_obj obj, t_ray r)
@@ -54,7 +55,7 @@ float   ray_sphere_intersection(t_obj obj, t_ray r)
     t_vector4   tmp;
     float       discriminant;
 
-    tmp = vector_substract(r.position, obj.position);
+    tmp = vector_substract(r.origin, obj.origin);
     a = vector_dot(r.direction, r.direction);
     b = 2 * vector_dot(tmp, r.direction);
     c = vector_dot(tmp, tmp) - (obj.diameter / 2) * (obj.diameter / 2);
@@ -75,7 +76,7 @@ bool    rayHit(t_ray r)
     {
         if (tmp->object.type == SPHERE)
         {
-            if (ray_sphere_intersection(tmp->object, r) > 0)
+            if (ray_sphere_intersection(tmp->object, r) >= 0)
                 return (true);
         }
         tmp = tmp->next;

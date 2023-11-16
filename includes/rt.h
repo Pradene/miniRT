@@ -9,6 +9,8 @@
 # include <float.h>
 
 # include "color.h"
+# include "matrice.h"
+# include "mlx_utils.h"
 # include "objects.h"
 # include "parsing.h"
 # include "ray.h"
@@ -22,19 +24,6 @@
 
 # define PI 3.14159265359
 
-# define WIDTH 1920
-# define HEIGHT 1080
-# define ASPECT_RATIO (float)WIDTH / (float)HEIGHT
-
-typedef struct s_image
-{
-	void	*image;
-	char	*data;
-	int		bpp;
-	int		size_line;
-	int		endian;
-}	t_image;
-
 typedef struct s_data
 {
     t_obj_list  *objects;
@@ -44,12 +33,15 @@ typedef struct s_data
     void        *id;
     void        *win;
     t_image     img;
-    t_vector4   pixels[HEIGHT * WIDTH];
 }   t_data;
 
 // Data
 t_data  *get_data();
 int     free_data();
+
+// Camera
+void    calculatePixels(t_data *data);
+int     camera(char **args);
 
 // Rendering
 void    renderer(char *name);

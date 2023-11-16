@@ -2,7 +2,10 @@ COLOR	= color.c
 
 EVENT	= key.c
 
-OBJECTS	= check.c \
+MATRICE	= matrice.c
+
+OBJECTS	= camera.c \
+		check.c \
 		objects.c \
 		print.c
 
@@ -15,6 +18,7 @@ RENDER	= render.c \
 
 UTILS	= atof.c \
 		clamp.c \
+		pixel_put.c \
 		radian.c \
 		string_array.c
 
@@ -28,6 +32,7 @@ VECTOR	= add.c \
 
 FILES	+= $(addprefix color/, $(COLOR))
 FILES	+= $(addprefix event/, $(EVENT))
+FILES	+= $(addprefix matrice/, $(MATRICE))
 FILES	+= $(addprefix objects/, $(OBJECTS))
 FILES	+= $(addprefix parsing/, $(PARSING))
 FILES	+= $(addprefix ray/, $(RAY))

@@ -20,7 +20,7 @@ void    print_rotation(t_vector4 rotation)
 void    print_sphere(t_obj obj)
 {
     printf("SPHERE :\n");
-    print_pos(obj.position);
+    print_pos(obj.origin);
     printf("    diameter: %lf\n", obj.diameter);
     print_color(obj.color);
     
@@ -29,7 +29,7 @@ void    print_sphere(t_obj obj)
 void    print_plane(t_obj obj)
 {
     printf("PLANE :\n");
-    print_pos(obj.position);
+    print_pos(obj.origin);
     print_rotation(obj.rotation);
     print_color(obj.color);
 }
@@ -37,7 +37,7 @@ void    print_plane(t_obj obj)
 void    print_cylinder(t_obj obj)
 {
     printf("CYLINDER :\n");
-    print_pos(obj.position);
+    print_pos(obj.origin);
     print_rotation(obj.rotation);
     printf("    diameter: %lf\n", obj.diameter);
     printf("    height: %lf\n", obj.height);
@@ -58,7 +58,7 @@ void    print_light(t_light light)
     if (!light.created)
         return ;
     printf("LIGHT :\n");
-    print_pos(light.position);
+    print_pos(light.origin);
     printf("    brightness: %lf\n", light.brightness);
     print_color(light.color);
 }
@@ -68,7 +68,7 @@ void    print_camera(t_camera camera)
     if (!camera.created)
         return ;
     printf("CAMERA :\n");
-    print_pos(camera.position);
+    print_pos(camera.origin);
     print_rotation(camera.direction);
     printf("    fov: %d\n", camera.fov);
 }

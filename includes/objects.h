@@ -4,18 +4,25 @@
 # include "vector.h"
 # include "color.h"
 
+# define WIDTH 1920
+# define HEIGHT 1080
+# define ASPECT_RATIO (float)WIDTH / (float)HEIGHT
+
 typedef struct  s_camera
 {
     int         created;
-    t_vector4   position;
+    t_vector4   origin;
     t_vector4   direction;
     int         fov;
+    t_mat       m_projection;
+    t_mat       m_inverse_projection;
+    t_vector4   ray_direction[HEIGHT * WIDTH];
 }   t_camera;
 
 typedef struct  s_light
 {
     int         created;
-    t_vector4   position;
+    t_vector4   origin;
     t_color     color;
     float       brightness;
 }   t_light;
@@ -41,7 +48,7 @@ typedef enum    e_obj_type
 typedef struct  s_obj
 {
     t_obj_type  type;
-    t_vector4   position;
+    t_vector4   origin;
     t_vector4   rotation;
     t_color     color;
     float       diameter;
