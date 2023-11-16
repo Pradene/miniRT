@@ -1,11 +1,8 @@
 #ifndef MATRICE
 # define MATRICE
 
-typedef struct s_mat
-{
-    float   array[4 * 4];
-}   t_mat;
+float   *mat(int size);
 
-void    inverse_mat(t_mat m, t_mat *res);
+void    inverse_mat(float *m, float **res);
 
 #endif

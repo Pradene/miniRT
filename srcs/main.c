@@ -24,6 +24,10 @@ int free_data()
 
     data = get_data();
     free_objects(&data->objects);
+    free(data->camera.m_projection);
+    free(data->camera.m_inverse_projection);
+    free(data->camera.m_view);
+    free(data->camera.m_inverse_view);
     if (data->id && data->img.image)
 	    mlx_destroy_image(data->id, data->img.image);
 	if (data->id && data->win)

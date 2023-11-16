@@ -33,7 +33,7 @@ void    render()
     t_data  *data;
 
     data = get_data();
-    calculatePixels(data);
+    calculate_rays(data);
     mlx_loop_hook(data->id, &update, data);
 	mlx_hook(data->win, 2, 1L << 0, &key, data);
 	mlx_hook(data->win, 17, 0, &free_data, data);

@@ -14,8 +14,10 @@ typedef struct  s_camera
     t_vector4   origin;
     t_vector4   direction;
     int         fov;
-    t_mat       m_projection;
-    t_mat       m_inverse_projection;
+    float       *m_projection;
+    float       *m_inverse_projection;
+    float       *m_view;
+    float       *m_inverse_view;
     t_vector4   ray_direction[HEIGHT * WIDTH];
 }   t_camera;
 

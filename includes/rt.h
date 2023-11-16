@@ -40,7 +40,7 @@ t_data  *get_data();
 int     free_data();
 
 // Camera
-void    calculatePixels(t_data *data);
+void    calculate_rays(t_data *data);
 int     camera(char **args);
 
 // Rendering

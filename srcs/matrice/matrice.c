@@ -1,6 +1,27 @@
 #include "../../includes/rt.h"
 
-void    replace_line(float *m[], int index)
+float   *mat(int size)
+{
+    int     i;
+    int     j;
+    float   *m;
+
+    m = malloc(sizeof(float) * (size * size));
+    if (!m)
+        return (NULL);
+    i = -1;
+    while (++i < size)
+    {
+        j = -1;
+        while (++j < size)
+        {
+            m[i * size + j] = 0.0;
+        }
+    }
+    return (m);
+}
+
+void    replace_line(float **m, int index)
 {
     int     r;
     int     i;
@@ -24,17 +45,15 @@ void    replace_line(float *m[], int index)
     }
 }
 
-void    inverse_mat(t_mat m, t_mat *res)
+float   *increased_mat(float *m)
 {
     int     i;
     int     j;
-    int     k;
-    float   pivot;
-    float   factor;
-    float   *tmp;
+    float   *t;
 
-    (void)res;
-    tmp = malloc(sizeof(float) * (4 * 8));
+    t = (float *)malloc(sizeof(float) * (4 * 4 * 2));
+    if (!t)
+        return (NULL);
     i = -1;
     while (++i < 4)
     {
@@ -42,38 +61,66 @@ void    inverse_mat(t_mat m, t_mat *res)
         while (++j < 4)
         {
             if (i == j)
-                tmp[i * 8 + j + 4] = 1;
+                t[i * 8 + j + 4] = 1;
             else
-                tmp[i * 8 + j + 4] = 0;
-            tmp[i * 8 + j] = m.array[i * 4 + j];
+                t[i * 8 + j + 4] = 0;
+            t[i * 8 + j] = m[i * 4 + j];
         }
     }
+    return (t);
+}
+
+void    inverse_mat_calcul(float **m)
+{
+    int     i;
+    int     j;
+    int     k;
+    float   pivot;
+    float   factor;
 
     i = -1;
     while (++i < 4)
     {
-        pivot = tmp[i * 8 + i];
+        pivot = (*m)[i * 8 + i];
         if (pivot == 0)
         {
-            replace_line(&tmp, i);
-            pivot = tmp[i * 8 + i];
+            replace_line(m, i);
+            pivot = (*m)[i * 8 + i];
         }
         j = -1;
         while (++j < 4 * 2)
-        {
             if (pivot != 0)
-                tmp[i * 8 + j] /= pivot;
-        }
+                (*m)[i * 8 + j] /= pivot;
         k = -1;
         while (++k < 4)
         {
             if (k != i)
             {
-                factor = tmp[k * 8 + i];
+                factor = (*m)[k * 8 + i];
                 j = -1;
                 while (++j < 4 * 2)
-                    tmp[k * 8 + j] -= factor * tmp[i * 8 + j];
+                    (*m)[k * 8 + j] -= factor * (*m)[i * 8 + j];
             }
         }
     }
+}
+
+void    inverse_mat(float *m, float **res)
+{
+    int     i;
+    int     j;
+    float   *tmp;
+
+    tmp = increased_mat(m);
+    if (!tmp)
+        return ;
+    inverse_mat_calcul(&tmp);
+    i = -1;
+    while (++i < 4)
+    {
+        j = -1;
+        while (++j < 4)
+            (*res)[i * 4 + j] = tmp[i * 8 + j + 4];
+    }
+    free(tmp);
 }
