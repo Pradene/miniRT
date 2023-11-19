@@ -1,7 +1,7 @@
 #include "../../includes/rt.h"
 
 // this function gives the dot product of 2 vectors / points
-float   vector_dot(t_vector4 v1, t_vector4 v2)
+float   vector_dot(vec4 v1, vec4 v2)
 {
     float   res;
 

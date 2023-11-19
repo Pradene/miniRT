@@ -38,7 +38,7 @@ int check_fov(int fov)
     return (1);
 }
 
-int check_direction(t_vector4 direction)
+int check_direction(vec4 direction)
 {
     if (!check_frange(direction.x, -1.0, 1.0) \
     || !check_frange(direction.y, -1.0, 1.0) \

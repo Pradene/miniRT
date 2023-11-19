@@ -22,12 +22,10 @@ UTILS	= atof.c \
 		radian.c \
 		string_array.c
 
-VECTOR	= add.c \
-		atov4.c \
+VECTOR	= atov4.c \
 		cross.c \
 		dot.c \
 		normalize.c \
-		substract.c \
 		vector.c
 
 FILES	+= $(addprefix color/, $(COLOR))
@@ -47,7 +45,7 @@ OBJS	= $(SRCS:.c=.o)
 
 CC		= cc
 
-CFLAGS	= -std=c99 -Wall -Wextra -Werror -g
+CFLAGS	= -std=c99 -Wall -Wextra -Werror -g -fenable-matrix
 
 NAME	= minirt
 

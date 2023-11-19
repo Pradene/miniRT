@@ -1,8 +1,8 @@
 #include "../../includes/rt.h"
 
-t_vector4   atov4(char *s, bool vector)
+vec4   atov4(char *s, bool vector)
 {
-    t_vector4   v;
+    vec4   v;
     char        *tmp;
     char        **infos;
 

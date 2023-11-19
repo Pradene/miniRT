@@ -10,23 +10,23 @@
 
 typedef struct  s_camera
 {
-    int         created;
-    t_vector4   origin;
-    t_vector4   direction;
-    int         fov;
-    float       *m_projection;
-    float       *m_inverse_projection;
-    float       *m_view;
-    float       *m_inverse_view;
-    t_vector4   ray_direction[HEIGHT * WIDTH];
+    int     created;
+    vec4    origin;
+    vec4    direction;
+    int     fov;
+    mat44   m_projection;
+    mat44   m_inverse_projection;
+    mat44   m_view;
+    mat44   m_inverse_view;
+    vec4    ray_direction[HEIGHT * WIDTH];
 }   t_camera;
 
 typedef struct  s_light
 {
-    int         created;
-    t_vector4   origin;
-    t_color     color;
-    float       brightness;
+    int     created;
+    vec4    origin;
+    t_color color;
+    float   brightness;
 }   t_light;
 
 typedef struct  s_alight
@@ -50,8 +50,8 @@ typedef enum    e_obj_type
 typedef struct  s_obj
 {
     t_obj_type  type;
-    t_vector4   origin;
-    t_vector4   rotation;
+    vec4        origin;
+    vec4        rotation;
     t_color     color;
     float       diameter;
     float       height;
@@ -73,7 +73,7 @@ int     check_frange(float value, float min, float max);
 int     check_color(t_color color);
 int     check_brightness(float brightness);
 int     check_fov(int fov);
-int     check_direction(t_vector4 direction);
+int     check_direction(vec4 direction);
 
 void    create_objects(char **sa);
 

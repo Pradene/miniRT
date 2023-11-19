@@ -6,12 +6,12 @@ void    print_color(t_color color)
     color.r, color.g, color.b);
 }
 
-void    print_pos(t_vector4 pos)
+void    print_pos(vec4 pos)
 {
     printf("    pos: x = %lf, y = %lf, z = %lf\n", pos.x, pos.y, pos.z);
 }
 
-void    print_rotation(t_vector4 rotation)
+void    print_rotation(vec4 rotation)
 {
     printf("    rotation: x = %lf, y = %lf, z = %lf\n", \
     rotation.x, rotation.y, rotation.z);

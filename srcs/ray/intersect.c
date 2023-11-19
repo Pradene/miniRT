@@ -1,37 +1,22 @@
 #include "../../includes/rt.h"
 
-float   min(float f1, float f2)
-{
-    if (f1 < f2)
-        return (f1);
-    return (f2);
-}
-
-float   max(float f1, float f2)
-{
-    if (f1 > f2)
-        return (f1);
-    return (f2);
-}
-
 t_color get_color(t_obj obj, t_ray ray, float t)
 {
     t_data      *data;
-    t_vector4   hp;
-    t_vector4   dir;
+    vec4        hp;
+    vec4        dir;
+    vec4        normal;
     t_color     c;
     float       ratio;
 
     data = get_data();
-    hp = vector_substract(ray.origin, obj.origin);
-    hp = vector_add(hp, vector_multiply(ray.direction, t));
-    vector_normalize(&hp);
-    dir = vector_add(hp, obj.origin);
-    dir = vector_substract(dir, data->light.origin);
+    hp = ray.origin - obj.origin + ray.direction * t;
+    normal = hp;
+    vector_normalize(&normal);
+    dir = hp + obj.origin - data->light.origin;
     vector_normalize(&dir);
-    ray.origin = vector_add(obj.origin, vector_multiply(hp, 1.0001));
-    ray.direction = vector_substract(ray.origin, data->light.origin);
-    ray.direction = vector_multiply(ray.direction, -1);
+    ray.origin = obj.origin + hp * 1.0001;
+    ray.direction = -(ray.origin - data->light.origin);
     vector_normalize(&ray.direction);
     if (rayHit(ray))
     {
@@ -40,22 +25,22 @@ t_color get_color(t_obj obj, t_ray ray, float t)
         c.b = obj.color.b * data->alight.brightness;
         return (c);
     }
-    ratio = max(0.0, vector_dot(hp, vector_multiply(dir, -1)));
-    c.r = obj.color.r * min(1.0, ratio + data->alight.brightness);
-    c.g = obj.color.g * min(1.0, ratio + data->alight.brightness);
-    c.b = obj.color.b * min(1.0, ratio + data->alight.brightness);
+    ratio = fmaxf(0.0, vector_dot(hp, -dir));
+    c.r = obj.color.r * fminf(1.0, ratio + data->alight.brightness);
+    c.g = obj.color.g * fminf(1.0, ratio + data->alight.brightness);
+    c.b = obj.color.b * fminf(1.0, ratio + data->alight.brightness);
     return (c);
 }
 
 float   ray_sphere_intersection(t_obj obj, t_ray r)
 {
-    float       a;
-    float       b;
-    float       c;
-    t_vector4   tmp;
-    float       discriminant;
+    float  a;
+    float  b;
+    float  c;
+    vec4   tmp;
+    float  discriminant;
 
-    tmp = vector_substract(r.origin, obj.origin);
+    tmp = r.origin - obj.origin;
     a = vector_dot(r.direction, r.direction);
     b = 2 * vector_dot(tmp, r.direction);
     c = vector_dot(tmp, tmp) - (obj.diameter / 2) * (obj.diameter / 2);

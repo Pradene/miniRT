@@ -19,6 +19,20 @@ void    trace(t_data *data)
     }
 }
 
+float   get_elapsed_time(void)
+{
+    float           elapsed_time;
+    struct timeval  tv;
+    long            time;
+    static long     last_frame = 0;
+
+    gettimeofday(&tv, NULL);
+    time = tv.tv_sec * 1000 + tv.tv_usec / 1000;
+    elapsed_time = time - last_frame;
+    last_frame = time;
+    return (elapsed_time);
+}
+
 int update(t_data *data)
 {
     if (!data->win)

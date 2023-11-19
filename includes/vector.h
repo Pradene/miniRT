@@ -3,25 +3,14 @@
 
 #include <stdbool.h>
 
-typedef struct s_vector4
-{
-    float   x;
-    float   y;
-    float   z;
-    float   w;
-}   t_vector4;
+typedef float vec4 __attribute__((ext_vector_type(4)));
 
-t_vector4   vector(float x, float y, float z, float w);
-t_vector4   vector_add(t_vector4 v1, t_vector4 v2);
-t_vector4   vector_substract(t_vector4 v1, t_vector4 v2);
-float       vector_dot(t_vector4 v1, t_vector4 v2);
-t_vector4   vector_cross(t_vector4 v1, t_vector4 v2);
+vec4   vector4(float x, float y, float z, float w);
+float  vector_dot(vec4 v1, vec4 v2);
+vec4   vector_cross(vec4 v1, vec4 v2);
 
-t_vector4   vector_multiply(t_vector4 v, const float m);
-t_vector4   vector_divide(t_vector4 v, const float d);
+void   vector_normalize(vec4 *v);
 
-void        vector_normalize(t_vector4 *v);
-
-t_vector4   atov4(char *s, bool vector);
+vec4   atov4(char *s, bool vector);
 
 #endif

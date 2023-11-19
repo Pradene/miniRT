@@ -5,8 +5,8 @@
 
 typedef struct s_ray
 {
-    t_vector4   origin;
-    t_vector4   direction;
+    vec4   origin;
+    vec4   direction;
 }   t_ray;
 
 t_color intersect(t_ray r);

@@ -49,7 +49,6 @@ void    parsing(char *path)
     }
     file = read_file(fd);
     create_objects(file);
-    print_objects();
     free_string_array(file);
     close(fd);
 }
