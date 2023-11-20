@@ -11,4 +11,6 @@ void    mat(mat44 *m);
 
 bool    mat_inverse(mat44 m, mat44 *inv);
 
+vec4    mat_vec_product(mat44 m, vec4 v);
+
 #endif

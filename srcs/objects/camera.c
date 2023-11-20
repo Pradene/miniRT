@@ -2,19 +2,22 @@
 
 void    calculate_rays(t_data *data)
 {
-    int         i;
-    // vec4   target;
-    // vec4   ray_direction;
+    int     i;
+    float   x;
+    float   y;
+    vec4    r;
 
     i = 0;
     while (i < HEIGHT * WIDTH)
     {
-        data->camera.ray_direction[i].x = data->camera.direction.x + (((i % WIDTH + 0.5) / WIDTH) * 2.0 - 1.0) * ASPECT_RATIO * tan(radian(data->camera.fov / 2));
-        data->camera.ray_direction[i].y = data->camera.direction.y + (((HEIGHT - (i / WIDTH + 0.5)) / HEIGHT) * 2.0 - 1.0) * tan(radian(data->camera.fov / 2));
-        data->camera.ray_direction[i].z = data->camera.direction.z + -1;
-        data->camera.ray_direction[i].w = 1;
-        vector_normalize(&data->camera.ray_direction[i]);
-
+        x = (float)(i % WIDTH + 0.5) / WIDTH * 2 - 1.0;
+        y = (float)(i / WIDTH + 0.5) / HEIGHT * 2 - 1.0;
+        vec4 v = mat_vec_product(data->camera.m_inverse_projection, vector4(x, y, 1, 1));
+        v /= v.w;
+        v.w = 0;
+        vector_normalize(&v);
+        r = mat_vec_product(data->camera.m_inverse_view, v);
+        data->camera.ray_direction[i] = r;
         ++i;
     }
 }
@@ -31,28 +34,28 @@ void    view_matrix(t_camera *cam, vec4 forward)
     vector_normalize(&up);
     cam->m_view[0][0] = right.x;
     cam->m_view[0][1] = up.x;
-    cam->m_view[0][2] = -forward.x;
+    cam->m_view[0][2] = forward.x;
     cam->m_view[0][3] = 0;
     cam->m_view[1][0] = right.y;
     cam->m_view[1][1] = up.y;
-    cam->m_view[1][2] = -forward.y;
+    cam->m_view[1][2] = forward.y;
     cam->m_view[1][3] = 0;
     cam->m_view[2][0] = right.z;
     cam->m_view[2][1] = up.z;
-    cam->m_view[2][2] = -forward.z;
+    cam->m_view[2][2] = forward.z;
     cam->m_view[2][3] = 0;
     cam->m_view[3][0] = -vector_dot(cam->origin, right);
     cam->m_view[3][1] = -vector_dot(cam->origin, up);
-    cam->m_view[3][2] = vector_dot(cam->origin, forward);
+    cam->m_view[3][2] = -vector_dot(cam->origin, forward);
     cam->m_view[3][3] = 1;
 }
 
 void    projection_matrix(t_camera *cam, int near, int far, int fov)
 {
-    cam->m_projection[0][0] = 1 / ASPECT_RATIO * tan((float)fov / 2);
-    cam->m_projection[1][1] = 1 / tan(fov / 2);
+    cam->m_projection[0][0] = 1.0 / (ASPECT_RATIO * tan((float)fov / 2));
+    cam->m_projection[1][1] = 1.0 / tan((float)fov / 2);
     cam->m_projection[2][2] = -(far + near) / (far - near);
-    cam->m_projection[2][3] = -1;
+    cam->m_projection[2][3] = -1.0;
     cam->m_projection[3][2] = -(2 * far * near) / (far - near);
 }
 
@@ -89,11 +92,11 @@ int camera(char **args)
     projection_matrix(&data->camera, 1, 100, data->camera.fov);
     mat_inverse(data->camera.m_projection, &data->camera.m_inverse_projection);
 
-    // mat_print(data->camera.m_view);
-    // mat_print(data->camera.m_inverse_view);
+    mat_print(data->camera.m_view);
+    mat_print(data->camera.m_inverse_view);
 
-    // mat_print(data->camera.m_projection);
-    // mat_print(data->camera.m_inverse_projection);
+    mat_print(data->camera.m_projection);
+    mat_print(data->camera.m_inverse_projection);
 
     if (!check_camera(data->camera))
         return (0);

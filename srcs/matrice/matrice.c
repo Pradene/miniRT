@@ -44,7 +44,6 @@ void    mat_copy(mat44 m, mat44 *cp)
     }
 }
 
-
 float determinant3x3(mat33 m) {
     return (m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2])
           - m[0][1] * (m[1][0] * m[2][2] - m[2][0] * m[1][2])
@@ -104,7 +103,7 @@ void    adjugate(mat44 m, mat44 *tmp)
     }
 }
 
-void    transpose(mat44 *m)
+void    mat_transpose(mat44 *m)
 {
     int     i;
     int     j;
@@ -131,16 +130,25 @@ bool    mat_inverse(mat44 m, mat44 *inv)
     if (det == 0)
         return (false);
     adjugate(m, &tmp);
-    transpose(&tmp);
+    mat_transpose(&tmp);
 
     i = -1;
     while (++i < 4)
     {
         j = -1;
         while (++j < 4)
-        {
             (*inv)[i][j] = (float)1 / det * tmp[i][j];
-        }
     }
     return (true);
+}
+
+vec4    mat_vec_product(mat44 m, vec4 v)
+{
+    vec4    res;
+
+    res.x = m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w;
+    res.y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w;
+    res.z = m[2][0] * v.x + m[2][1] * v.y + m[2][2] * v.z + m[2][3] * v.w;
+    res.w = m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w;
+    return (res);
 }
