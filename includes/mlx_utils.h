@@ -1,5 +1,5 @@
-#ifndef MLX_UTILS
-# define MLX_UTILS
+#ifndef MLX_UTILS_H
+# define MLX_UTILS_H
 
 typedef struct s_image
 {

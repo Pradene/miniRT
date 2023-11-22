@@ -2,7 +2,7 @@ COLOR	= color.c
 
 EVENT	= key.c
 
-MATRICE	= matrice.c
+matrix	= matrix.c
 
 OBJECTS	= camera.c \
 		check.c \
@@ -30,7 +30,7 @@ VECTOR	= atov4.c \
 
 FILES	+= $(addprefix color/, $(COLOR))
 FILES	+= $(addprefix event/, $(EVENT))
-FILES	+= $(addprefix matrice/, $(MATRICE))
+FILES	+= $(addprefix matrix/, $(matrix))
 FILES	+= $(addprefix objects/, $(OBJECTS))
 FILES	+= $(addprefix parsing/, $(PARSING))
 FILES	+= $(addprefix ray/, $(RAY))

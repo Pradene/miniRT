@@ -1,25 +1,8 @@
-#ifndef OBJECTS
-# define OBJECTS
+#ifndef OBJECTS_H
+# define OBJECTS_H
 
 # include "vector.h"
 # include "color.h"
-
-# define WIDTH 1920
-# define HEIGHT 1080
-# define ASPECT_RATIO (float)WIDTH / (float)HEIGHT
-
-typedef struct  s_camera
-{
-    int     created;
-    vec4    origin;
-    vec4    direction;
-    int     fov;
-    mat44   m_projection;
-    mat44   m_inverse_projection;
-    mat44   m_view;
-    mat44   m_inverse_view;
-    vec4    ray_direction[HEIGHT * WIDTH];
-}   t_camera;
 
 typedef struct  s_light
 {
@@ -39,8 +22,8 @@ typedef struct  s_alight
 typedef enum    e_obj_type
 {
     ERROR,
-    AMBIENT_LIGHT,
     CAMERA,
+    AMBIENT_LIGHT,
     LIGHT,
     SPHERE,
     PLANE,

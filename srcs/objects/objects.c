@@ -46,7 +46,7 @@ void    add_objects(t_obj_list **lst, t_obj_list *new)
 t_obj_type  check_obj_type(char *type)
 {
     int                 i;
-    static const char   *types[] = {"A", "C", "L", "sp", "pl", "cy", NULL};
+    static const char   *types[] = {"C", "A", "L", "sp", "pl", "cy", NULL};
 
     if (!type)
         return (ERROR);
@@ -178,7 +178,7 @@ int cylinder(char **args)
 
 int create_object_type(char **args, t_obj_type type)
 {
-    int (*func[])() = {ambient_light, camera, light, sphere, plane, cylinder};
+    int (*func[])() = {camera, ambient_light, light, sphere, plane, cylinder};
 
     return ((*func[type - 1])(args));
 }

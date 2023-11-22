@@ -1,5 +1,5 @@
-#ifndef RT
-# define RT
+#ifndef RT_H
+# define RT_H
 
 # include <math.h>
 # include <stdio.h>
@@ -11,8 +11,9 @@
 # include <limits.h>
 # include <float.h>
 
+# include "camera.h"
 # include "color.h"
-# include "matrice.h"
+# include "matrix.h"
 # include "mlx_utils.h"
 # include "objects.h"
 # include "parsing.h"
@@ -35,16 +36,13 @@ typedef struct s_data
     t_alight    alight;
     void        *id;
     void        *win;
+    float       et;
     t_image     img;
 }   t_data;
 
 // Data
 t_data  *get_data();
 int     free_data();
-
-// Camera
-void    calculate_rays(t_data *data);
-int     camera(char **args);
 
 // Rendering
 void    renderer(char *name);

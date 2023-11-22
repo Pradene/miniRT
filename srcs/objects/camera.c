@@ -1,24 +1,24 @@
 #include "../../includes/rt.h"
 
-void    calculate_rays(t_data *data)
+void    calculate_rays(t_camera *cam)
 {
     int     i;
     float   x;
     float   y;
     vec4    r;
 
-    i = 0;
-    while (i < HEIGHT * WIDTH)
+    i = -1;
+    while (++i < HEIGHT * WIDTH)
     {
         x = (float)(i % WIDTH + 0.5) / WIDTH * 2 - 1.0;
         y = (float)(i / WIDTH + 0.5) / HEIGHT * 2 - 1.0;
-        vec4 v = mat_vec_product(data->camera.m_inverse_projection, vector4(x, y, 1, 1));
+        vec4 v = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
         v /= v.w;
-        v.w = 0;
+        v.w = 1;
         vector_normalize(&v);
-        r = mat_vec_product(data->camera.m_inverse_view, v);
-        data->camera.ray_direction[i] = r;
-        ++i;
+        r = mat_vec_product(cam->m_inverse_view, v);
+        v.w = 1;
+        cam->ray_direction[i] = r;
     }
 }
 
@@ -101,4 +101,10 @@ int camera(char **args)
     if (!check_camera(data->camera))
         return (0);
     return (1);
+}
+
+void    move_camera(t_camera *cam)
+{
+    view_matrix(cam, cam->direction);
+    mat_inverse(cam->m_view, &cam->m_inverse_view);
 }

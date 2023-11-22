@@ -1,5 +1,5 @@
-#ifndef MATRICE
-# define MATRICE
+#ifndef MATRIX_H
+# define MATRIX_H
 
 # include "vector.h"
 

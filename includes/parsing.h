@@ -1,5 +1,5 @@
-#ifndef PARSING
-# define PARSING
+#ifndef PARSING_H
+# define PARSING_H
 
 # include <unistd.h>
 # include <sys/stat.h>
