@@ -28,9 +28,9 @@ void    view_matrix(t_camera *cam, vec4 forward)
     vec4   up;
 
     vector_normalize(&forward);
-    right = vector_cross(vector4(0, 1, 0, 1), forward);
+    right = vector_cross(forward, vector4(0, 1, 0, 1));
     vector_normalize(&right);
-    up = vector_cross(forward, right);
+    up = vector_cross(right, forward);
     vector_normalize(&up);
     cam->m_view[0][0] = right.x;
     cam->m_view[0][1] = up.x;
@@ -80,6 +80,7 @@ int camera(char **args)
     data->camera.direction = atov4(args[2], true);
     data->camera.fov = (int)ft_atof(args[3], &tmp);
     data->camera.created = 1;
+
     mat(&data->camera.m_view);
     mat(&data->camera.m_inverse_view);
 
@@ -92,12 +93,6 @@ int camera(char **args)
     projection_matrix(&data->camera, 1, 100, data->camera.fov);
     mat_inverse(data->camera.m_projection, &data->camera.m_inverse_projection);
 
-    mat_print(data->camera.m_view);
-    mat_print(data->camera.m_inverse_view);
-
-    mat_print(data->camera.m_projection);
-    mat_print(data->camera.m_inverse_projection);
-
     if (!check_camera(data->camera))
         return (0);
     return (1);
@@ -107,4 +102,40 @@ void    move_camera(t_camera *cam)
 {
     view_matrix(cam, cam->direction);
     mat_inverse(cam->m_view, &cam->m_inverse_view);
+}
+
+void    rotate_camera(t_camera *cam, float angle_x, float angle_y)
+{
+    mat44   rot;
+    float   angle_z;
+
+    angle_z = 0;
+    rot[0][0] = cos(angle_y) * cos(angle_z);
+    rot[0][1] = sin(angle_x) * sin(angle_y) * cos(angle_z) - cos(angle_x) * sin(angle_z); 
+    rot[0][2] = cos(angle_x) * sin(angle_y) * cos(angle_z) + sin(angle_x) * sin(angle_z); 
+    rot[0][3] = 0;
+
+    rot[1][0] = cos(angle_y) * sin(angle_z);
+    rot[1][1] = sin(angle_x) * sin(angle_y) * sin(angle_z) + cos(angle_x) * cos(angle_z);
+    rot[1][2] = cos(angle_x) * sin(angle_y) * sin(angle_z) - sin(angle_x) * cos(angle_z); 
+    rot[1][0] = 0;
+
+    rot[2][0] = -sin(angle_y);
+    rot[2][1] = sin(angle_x) * cos(angle_y);
+    rot[2][2] = cos(angle_x) * cos(angle_y);
+    rot[2][3] = 0;
+
+    rot[3][0] = 0;
+    rot[3][1] = 0;
+    rot[3][2] = 0;
+    rot[3][3] = 1;
+
+    // cam->m_view = mat_product(cam->m_view, rot);
+    // mat_inverse(cam->m_view, &cam->m_inverse_view);
+
+    cam->direction = mat_vec_product(rot, cam->direction);
+    vector_normalize(&cam->direction);
+    view_matrix(cam, cam->direction);
+    mat_inverse(cam->m_view, &cam->m_inverse_view);
+    calculate_rays(cam);
 }

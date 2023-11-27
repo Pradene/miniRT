@@ -25,5 +25,6 @@ void    calculate_rays(t_camera *cam);
 int     camera(char **args);
 
 void    move_camera(t_camera *cam);
+void    rotate_camera(t_camera *cam, float angle_x, float angle_y);
 
 #endif

@@ -152,3 +152,25 @@ vec4    mat_vec_product(mat44 m, vec4 v)
     res.w = m[3][0] * v.x + m[3][1] * v.y + m[3][2] * v.z + m[3][3] * v.w;
     return (res);
 }
+
+mat44   mat_product(mat44 m, mat44 n)
+{
+    mat44   res;
+    int     i;
+    int     j;
+    int     k;
+
+    i = -1;
+    while (++i < 4)
+    {
+        j = -1;
+        while (++j < 4)
+        {
+            k = -1;
+            res[i][j] = 0;
+            while (++k < 4)
+                res[i][j] += m[i][k] * n[k][j];
+        }
+    }
+    return (res);
+}

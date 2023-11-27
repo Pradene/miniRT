@@ -9,12 +9,10 @@ int	key(int key, t_data *data)
     vec4   forward;
 
 	forward = data->camera.direction;
-	right = vector_cross(vector4(0, 1, 0, 1), forward);
+    right = vector_cross(forward, vector4(0, 1, 0, 1));
     vector_normalize(&right);
-    up = vector_cross(forward, right);
+    up = vector_cross(right, forward);
     vector_normalize(&up);
-
-	printf("%d\n", key);
 	if (key == 65307)
 		free_data();
 	else if (key == 65361)
@@ -46,6 +44,23 @@ int	key(int key, t_data *data)
 	{
 		data->camera.origin += forward * data->et * MOVEMENT_SPEED;
 		move_camera(&data->camera);
+	}
+
+	if (key == 119)
+	{
+		rotate_camera(&data->camera, -1 * data->et * MOVEMENT_SPEED, 0);
+	}
+	else if (key == 97)
+	{
+		rotate_camera(&data->camera, 0, -1 * data->et * MOVEMENT_SPEED);
+	}
+	else if (key == 115)
+	{
+		rotate_camera(&data->camera, 1 * data->et * MOVEMENT_SPEED, 0);
+	}
+	else if (key == 100)
+	{
+		rotate_camera(&data->camera, 0, 1 * data->et * MOVEMENT_SPEED);
 	}
 	return (0);
 }

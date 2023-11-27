@@ -13,4 +13,6 @@ bool    mat_inverse(mat44 m, mat44 *inv);
 
 vec4    mat_vec_product(mat44 m, vec4 v);
 
+mat44   mat_product(mat44 m, mat44 n);
+
 #endif
