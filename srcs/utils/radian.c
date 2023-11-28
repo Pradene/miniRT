@@ -2,5 +2,5 @@
 
 float   radian(float angle)
 {
-    return (angle * PI / 180);
+    return (angle * (PI / 180));
 }

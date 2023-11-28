@@ -8,10 +8,11 @@ int	key(int key, t_data *data)
     vec4   up;
     vec4   forward;
 
+	up = vector4(0, 1, 0, 1);
 	forward = data->camera.direction;
-    right = vector_cross(forward, vector4(0, 1, 0, 1));
+    right = vector_cross(&forward, &up);
     vector_normalize(&right);
-    up = vector_cross(right, forward);
+    up = vector_cross(&right, &forward);
     vector_normalize(&up);
 	if (key == 65307)
 		free_data();

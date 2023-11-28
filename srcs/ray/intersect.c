@@ -1,21 +1,16 @@
 #include "../../includes/rt.h"
 
-t_color get_color(t_obj obj, t_ray ray, float t)
+t_color get_color(t_obj obj, t_ray ray, t_hit *h)
 {
     t_data      *data;
-    vec4        hp;
     vec4        dir;
-    vec4        normal;
     t_color     c;
     float       ratio;
 
     data = get_data();
-    hp = ray.origin - obj.origin + ray.direction * t;
-    normal = hp;
-    vector_normalize(&normal);
-    dir = hp + obj.origin - data->light.origin;
+    dir = h->w_position + obj.origin - data->light.origin;
     vector_normalize(&dir);
-    ray.origin = obj.origin + hp * 1.0001;
+    ray.origin = obj.origin + h->w_position * 1.0001;
     ray.direction = -(ray.origin - data->light.origin);
     vector_normalize(&ray.direction);
     if (rayHit(ray))
@@ -25,29 +20,46 @@ t_color get_color(t_obj obj, t_ray ray, float t)
         c.b = obj.color.b * data->alight.brightness;
         return (c);
     }
-    ratio = fmaxf(0.0, vector_dot(hp, -dir));
+    dir *= -1;
+    ratio = fmaxf(0.0, vector_dot(&h->normal, &dir));
     c.r = obj.color.r * fminf(1.0, ratio + data->alight.brightness);
     c.g = obj.color.g * fminf(1.0, ratio + data->alight.brightness);
     c.b = obj.color.b * fminf(1.0, ratio + data->alight.brightness);
     return (c);
 }
 
-float   ray_sphere_intersection(t_obj obj, t_ray r)
+t_hit   miss_ray()
 {
-    float  a;
-    float  b;
-    float  c;
-    vec4   tmp;
-    float  discriminant;
+    t_hit   h;
 
-    tmp = r.origin - obj.origin;
-    a = vector_dot(r.direction, r.direction);
-    b = 2 * vector_dot(tmp, r.direction);
-    c = vector_dot(tmp, tmp) - (obj.diameter / 2) * (obj.diameter / 2);
+    h.distance = -1;
+    h.object = NULL;
+    h.normal = 0;
+    h.w_position = 0;
+    return (h);
+}
+
+t_hit   ray_sphere_intersection(t_obj *obj, t_ray r)
+{
+    float   a;
+    float   b;
+    float   c;
+    float   discriminant;
+    t_hit   h;
+    vec4    tmp;
+
+    tmp = r.origin - obj->origin;
+    a = vector_dot(&r.direction, &r.direction);
+    b = 2 * vector_dot(&tmp, &r.direction);
+    c = vector_dot(&tmp, &tmp) - (obj->diameter / 2) * (obj->diameter / 2);
     discriminant = b * b - 4.0 * a * c;
     if (discriminant < 0.0)
-        return (-1.0);
-    return (-b - sqrt(discriminant)) / (2.0 * a);
+        return (miss_ray());
+    h.distance = (-b - sqrt(discriminant)) / (2.0 * a);
+    h.object = obj;
+    h.w_position = tmp + r.direction * h.distance;
+    h.normal = normalize(&h.w_position);
+    return (h);
 }
 
 bool    rayHit(t_ray r)
@@ -61,7 +73,7 @@ bool    rayHit(t_ray r)
     {
         if (tmp->object.type == SPHERE)
         {
-            if (ray_sphere_intersection(tmp->object, r) >= 0)
+            if (ray_sphere_intersection(&tmp->object, r).distance >= 0)
                 return (true);
         }
         tmp = tmp->next;
@@ -74,22 +86,22 @@ t_color intersect(t_ray r)
     t_data      *data;
     t_obj_list  *tmp;
     t_color     c;
-    float       tdistance;
-    float       distance;
+    t_hit       h;
+    t_hit       ht;
 
     c = color(0, 0, 0, 1);
     data = get_data();
     tmp = data->objects;
-    distance = FLT_MAX;
+    h.distance = FLT_MAX;
     while (tmp)
     {
         if (tmp->object.type == SPHERE)
         {
-            tdistance = ray_sphere_intersection(tmp->object, r);
-            if (tdistance > 0.0 && tdistance < distance)
+            ht = ray_sphere_intersection(&tmp->object, r);
+            if (ht.distance > 0.0 && ht.distance < h.distance)
             {
-                distance = tdistance;
-                c = get_color(tmp->object, r, distance);
+                h = ht;
+                c = get_color(tmp->object, r, &h);
             }
         }
         tmp = tmp->next;

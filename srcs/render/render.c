@@ -2,19 +2,19 @@
 
 // y = i / WIDTH
 // x = i % WIDTH
-void    trace(t_data *data)
+void    trace(t_image *img, t_camera *cam)
 {
     int     i;
     t_ray   ray;
     t_color color;
 
     i = 0;
-    ray.origin = data->camera.origin;
+    ray.origin = cam->origin;
     while (i < HEIGHT * WIDTH)
     {
-        ray.direction = data->camera.ray_direction[i];
+        ray.direction = cam->ray_direction[i];
         color = intersect(ray);
-        pixel_put(&data->img, i % WIDTH, i / WIDTH, color);
+        pixel_put(img, i % WIDTH, i / WIDTH, color);
         ++i;
     }
 }
@@ -38,7 +38,7 @@ int update(t_data *data)
     if (!data->win)
         return (1);
     data->et = get_elapsed_time();
-    trace(data);
+    trace(&data->img, &data->camera);
     mlx_put_image_to_window(data->id, data->win, data->img.image, 0, 0);
     return (0);
 }

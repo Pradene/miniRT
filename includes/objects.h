@@ -47,6 +47,14 @@ typedef struct  s_obj_list
     struct s_obj_list   *next;
 }   t_obj_list;
 
+typedef struct s_hit
+{
+    t_obj   *object;
+    vec4    w_position;
+    float   distance;
+    vec4    normal;
+}   t_hit;
+
 void    free_objects(t_obj_list **lst);
 
 void    print_objects(void);
