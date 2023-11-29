@@ -23,6 +23,9 @@ vec4    normalize(const vec4 *v)
     dot = vector_dot(v, v);
     magnitude = sqrt(dot);
     if (magnitude != 0)
+    {
+        res.w = v->w;
         res = *v / magnitude;
+    }
     return (res);
 }

@@ -6,17 +6,17 @@ void    calculate_rays(t_camera *cam)
     float   x;
     float   y;
     vec4    r;
+    vec4    v;
 
     i = -1;
     while (++i < HEIGHT * WIDTH)
     {
         x = (float)(i % WIDTH + 0.5) / WIDTH * 2 - 1.0;
         y = (float)(i / WIDTH + 0.5) / HEIGHT * 2 - 1.0;
-        vec4 v = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
+        v = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
         v /= v.w;
         vector_normalize(&v);
         r = mat_vec_product(cam->m_inverse_view, v);
-        v.w = 1;
         cam->ray_direction[i] = r;
     }
 }
