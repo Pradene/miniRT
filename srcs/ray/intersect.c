@@ -42,29 +42,33 @@ t_hit   miss_ray()
     return (h);
 }
 
+
 t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
 {
-    // t_hit   h;
-    // float   a;
-    // float   b;
-    // float   c;
-    // float   discriminant;
+    t_hit   h;
+    float   a;
+    float   b;
+    float   c;
+    float   discriminant;
+    vec4    tmp;
 
-    // a = powf(r.direction.x, 2.0) + powf(r.direction.y, 2.0);
-    // b = 2 * (r.direction.x * r.origin.x + r.direction.y * r.origin.y);
-    // c = powf(r.origin.x, 2.0) + powf(r.origin.y, 2.0) - powf(obj->diameter / 2, 2.0);
-    // discriminant = b * b - 4 * (a * c);
-    // h.distance = (-b - sqrt(discriminant)) / (2.0 * a);
-    // if (discriminant < 0.0 || h.distance < 0.0 || h.distance > obj->height)
-    //     return (miss_ray());
-    // h.object = obj;
-    // h.w_position = r.origin - obj->origin + r.direction * h.distance;
-    // h.normal = vector4(0, 1, 0, 1);
-    // return (h);
-
-    (void)obj;
-    (void)r;
-    return (miss_ray());
+    r.direction = vector_cross(&r.direction, &obj->rotation);
+    a = vector_dot(&r.direction, &r.direction);
+    tmp = r.origin - obj->origin;
+    tmp = vector_cross(&tmp, &obj->rotation);
+    b = 2 * vector_dot(&r.direction, &tmp);
+    tmp = r.origin - obj->origin;
+    tmp = vector_cross(&tmp, &obj->rotation);
+    c = vector_dot(&tmp, &tmp) - powf(obj->diameter / 2, 2.0);
+    discriminant = powf(b, 2.0) - 4 * c * a;
+    if (discriminant < 0)
+        return (miss_ray());
+    float   t = (-b - sqrt(discriminant)) / (2.0 * a);
+    h.w_position = r.origin - obj->origin + r.direction * t;
+    h.object = obj;
+    h.distance = t;
+    h.normal = vector4(0, 1, 0, 1);
+    return (h);
 }
 
 t_hit   ray_plane_intersection(t_obj *obj, t_ray r)
