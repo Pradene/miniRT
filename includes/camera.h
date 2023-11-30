@@ -4,8 +4,8 @@
 # include "vector.h"
 # include "matrix.h"
 
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1080
+# define HEIGHT 720
 # define ASPECT_RATIO (float)WIDTH / (float)HEIGHT
 
 typedef struct  s_camera
@@ -21,10 +21,19 @@ typedef struct  s_camera
     vec4    ray_direction[HEIGHT * WIDTH];
 }   t_camera;
 
-void    calculate_rays(t_camera *cam);
 int     camera(char **args);
 
-void    move_camera(t_camera *cam);
 void    rotate_camera(t_camera *cam, float angle_x, float angle_y);
+
+void    view_matrix(t_camera *cam, vec4 forward);
+void    calculate_m_view(t_camera *cam);
+void    calculate_rays(t_camera *cam);
+
+quat    multiply_quat(quat q1, quat q2);
+quat    angleAxis(float angle, vec4 axis);
+vec4    rotate(vec4 v, quat rotationQuat);
+quat    normalize_quat(quat q);
+void    quaternionToMatrix(quat q, mat44 *m);
+mat44   translate(t_camera *cam);
 
 #endif

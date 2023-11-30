@@ -16,7 +16,7 @@ t_color get_color(t_ray ray, t_hit *h)
     ray.origin = h->object->origin + h->w_position * 1.0001;
     ray.direction = -(ray.origin - data->light.origin);
     vector_normalize(&ray.direction);
-    if (rayHit(ray))
+    if (ray_hit(ray).distance > 0.0)
     {
         c.r = h->object->color.r * data->alight.brightness;
         c.g = h->object->color.g * data->alight.brightness;
@@ -44,14 +44,26 @@ t_hit   miss_ray()
 
 t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
 {
-    t_hit   h;
-    float   a;
-    float   b;
-    float   c;
+    // t_hit   h;
+    // float   a;
+    // float   b;
+    // float   c;
+    // float   discriminant;
+
+    // a = powf(r.direction.x, 2.0) + powf(r.direction.y, 2.0);
+    // b = 2 * (r.direction.x * r.origin.x + r.direction.y * r.origin.y);
+    // c = powf(r.origin.x, 2.0) + powf(r.origin.y, 2.0) - powf(obj->diameter / 2, 2.0);
+    // discriminant = b * b - 4 * (a * c);
+    // h.distance = (-b - sqrt(discriminant)) / (2.0 * a);
+    // if (discriminant < 0.0 || h.distance < 0.0 || h.distance > obj->height)
+    //     return (miss_ray());
+    // h.object = obj;
+    // h.w_position = r.origin - obj->origin + r.direction * h.distance;
+    // h.normal = vector4(0, 1, 0, 1);
+    // return (h);
 
     (void)obj;
     (void)r;
-    (void)h;
     return (miss_ray());
 }
 
@@ -86,7 +98,7 @@ t_hit   ray_sphere_intersection(t_obj *obj, t_ray r)
     tmp = r.origin - obj->origin;
     a = vector_dot(&r.direction, &r.direction);
     b = 2 * vector_dot(&tmp, &r.direction);
-    c = vector_dot(&tmp, &tmp) - (obj->diameter / 2) * (obj->diameter / 2);
+    c = vector_dot(&tmp, &tmp) - powf(obj->diameter / 2, 2.0);
     discriminant = b * b - 4.0 * a * c;
     if (discriminant < 0.0)
         return (miss_ray());
@@ -97,31 +109,7 @@ t_hit   ray_sphere_intersection(t_obj *obj, t_ray r)
     return (h);
 }
 
-bool    rayHit(t_ray r)
-{
-    t_data      *data;
-    t_obj_list  *tmp;
-
-    data = get_data();
-    tmp = data->objects;
-    while (tmp)
-    {
-        if (tmp->object.type == SPHERE)
-        {
-            if (ray_sphere_intersection(&tmp->object, r).distance >= 0)
-                return (true);
-        }
-        else if (tmp->object.type == PLANE)
-        {
-            if (ray_plane_intersection(&tmp->object, r).distance >= 0)
-                return (true);
-        }
-        tmp = tmp->next;
-    }
-    return (false);
-}
-
-t_color intersect(t_ray r)
+t_hit   ray_hit(t_ray r)
 {
     t_data      *data;
     t_obj_list  *tmp;
@@ -138,9 +126,21 @@ t_color intersect(t_ray r)
             ht = ray_sphere_intersection(&tmp->object, r);
         else if (tmp->object.type == PLANE)
             ht = ray_plane_intersection(&tmp->object, r);
+        else if (tmp->object.type == CYLINDER)
+            ht = ray_cylinder_intersection(&tmp->object, r);
         if (ht.distance > 0.0 && ht.distance < h.distance)
             h = ht;
         tmp = tmp->next;
     }
+    if (h.distance == FLT_MAX)
+        h.distance = -1;
+    return (h);
+}
+
+t_color intersect(t_ray r)
+{
+    t_hit       h;
+
+    h = ray_hit(r);
     return (get_color(r, &h));
 }

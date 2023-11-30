@@ -63,14 +63,14 @@ void    print_light(t_light light)
     print_color(light.color);
 }
 
-void    print_camera(t_camera camera)
+void    print_camera(t_camera *camera)
 {
-    if (!camera.created)
+    if (!camera->created)
         return ;
-    printf("CAMERA :\n");
-    print_pos(camera.origin);
-    print_rotation(camera.direction);
-    printf("    fov: %d\n", camera.fov);
+    printf("CAMERA->:\n");
+    print_pos(camera->origin);
+    print_rotation(camera->direction);
+    printf("    fov: %d\n", camera->fov);
 }
 
 void    print_objects(void)
@@ -82,7 +82,7 @@ void    print_objects(void)
     obj = data->objects;
     print_ambient_light(data->alight);
     print_light(data->light);
-    print_camera(data->camera);
+    print_camera(&data->camera);
     while (obj)
     {
         if (obj->object.type == SPHERE)

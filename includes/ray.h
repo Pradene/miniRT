@@ -2,6 +2,7 @@
 # define RAY_H
 
 #include "vector.h"
+#include "objects.h"
 
 typedef struct s_ray
 {
@@ -10,6 +11,6 @@ typedef struct s_ray
 }   t_ray;
 
 t_color intersect(t_ray r);
-bool    rayHit(t_ray r);
+t_hit   ray_hit(t_ray r);
 
 #endif
