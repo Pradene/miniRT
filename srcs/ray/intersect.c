@@ -48,73 +48,6 @@ t_hit   miss_ray()
     return (h);
 }
 
-// mat44   transform(vec4 origin, vec4 v)
-// {
-//     mat44   m;
-
-//     m[0][0] = 0;
-//     m[0][1] = -v.z;
-//     m[0][2] = v.y;
-//     m[0][3] = origin.x;
-
-//     m[1][0] = v.z;
-//     m[1][1] = 0;
-//     m[1][2] = -v.x;
-//     m[1][3] = origin.y;
-
-//     m[2][0] = -v.y;
-//     m[2][1] = v.x;
-//     m[2][2] = 0;
-//     m[2][3] = origin.z;
-
-//     m[3][0] = 0;
-//     m[3][1] = 0;
-//     m[3][2] = 0;
-//     m[3][3] = 1;
-//     return (m);
-
-// }
-
-// t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
-// {
-//     t_hit   h;
-//     mat44   m;
-//     mat44   mi;
-
-//     m = transform(obj->origin, obj->rotation);
-//     mat_inverse(m, &mi);
-//     r.origin = mat_vec_product(mi, r.origin);
-//     r.direction = mat_vec_product(mi, r.direction);
-
-//     float   a;
-//     float   b;
-//     float   c;
-
-//     a = r.direction.x * r.direction.x + r.direction.z * r.direction.z;
-//     b = 2 * (r.direction.x * r.direction.x + r.origin.z * r.origin.z);
-//     c = r.origin.x * r.origin.x + r.origin.z * r.origin.z - obj->diameter / 2 * obj->diameter / 2;
-
-//     float   discriminant;
-//     discriminant = b * b - 4 * a * c;
-//     if (discriminant < 0)
-//         return (miss_ray());
-
-//     float   t;
-//     t = (-b - sqrt(discriminant)) / (2.0 * a);
-//     h.w_position = r.origin * r.direction * t;
-
-//     if (h.w_position.y < 0 || h.w_position.y > obj->height)
-//         return (miss_ray());
-//     printf("ok\n");
-    
-//     h.w_position = mat_vec_product(m, h.w_position);
-//     h.distance = t;
-//     h.object = obj;
-//     h.normal = vector4(0, 1, 0, 1);
-
-//     return (h);
-// }
-
 float   dot(vec4 v1, vec4 v2)
 {
     return (v1.x * v2.x + v1.y * v2.y + v1.z * v2.z);
@@ -133,7 +66,6 @@ t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
     float   t;
 
     tmp1 = r.direction - dot(r.direction, obj->rotation) * obj->rotation;
-
     tmp2 = r.origin - obj->origin;
     tmp2 = tmp2 - dot(tmp2, obj->rotation) * obj->rotation;
 
@@ -145,13 +77,16 @@ t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
         return (miss_ray());
     t = (-b - sqrt(discriminant)) / (2.0 * a);
     h.w_position = r.origin + r.direction * t;
-    if (dot(obj->rotation, h.w_position - obj->origin) > 0 \
-    && dot(obj->rotation, h.w_position - (obj->origin + obj->rotation * obj->height)) < 0)
+    if (dot(obj->rotation, h.w_position - (obj->origin - obj->rotation * obj->height / 2)) > 0 \
+    && dot(obj->rotation, h.w_position - (obj->origin + obj->rotation * obj->height / 2)) < 0)
     {
-        h.w_position = r.origin - obj->origin + r.direction * t;
+        h.w_position = r.origin + r.direction * t;
         h.distance = t;
         h.object = obj;
-        h.normal = vector4(0, 1, 0, 1);
+
+        h.normal = dot(h.w_position - obj->origin, obj->rotation) * obj->rotation;
+        h.normal = h.w_position - obj->origin - h.normal;
+        vector_normalize(&h.normal);
         return (h);
     }
     return (miss_ray());
@@ -171,6 +106,8 @@ t_hit   ray_plane_intersection(t_obj *obj, t_ray r)
         h.object = obj;
         h.w_position = r.origin + r.direction * h.distance;
         h.normal = obj->rotation;
+        if (denom > 0.0001)
+            h.normal *= -1;
         return (h);
     }
     return (miss_ray());
