@@ -15,7 +15,8 @@ static char **read_file(int fd)
     while (line)
     {
         tmp = NULL;
-        line[ft_strlen(line) - 1] = '\0';
+        if (line[ft_strlen(line) - 1] == '\n')
+            line[ft_strlen(line) - 1] = '\0';
         tmp = malloc(sizeof(char *) * ((++i + 1) + 1));
         if (!tmp)
             return (free_string_array(file), free(line), NULL);
