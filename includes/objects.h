@@ -8,14 +8,14 @@ typedef struct  s_light
 {
     int     created;
     vec4    origin;
-    t_color color;
+    rgba    color;
     float   brightness;
 }   t_light;
 
 typedef struct  s_alight
 {
     int     created;
-    t_color color;
+    rgba    color;
     float   brightness;
 }   t_alight;
 
@@ -35,7 +35,7 @@ typedef struct  s_obj
     t_obj_type  type;
     vec4        origin;
     vec4        rotation;
-    t_color     color;
+    rgba        color;
     float       diameter;
     float       height;
     float       width;
@@ -61,7 +61,7 @@ void    print_objects(void);
 
 int     check_irange(int value, int min, int max);
 int     check_frange(float value, float min, float max);
-int     check_color(t_color color);
+int     check_color(rgba color);
 int     check_brightness(float brightness);
 int     check_fov(int fov);
 int     check_direction(vec4 direction);

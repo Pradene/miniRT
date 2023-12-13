@@ -29,7 +29,7 @@ static char **read_file(int fd)
     return (file);
 }
 
-void    parsing(char *path)
+int parsing(char *path)
 {
     int     fd;
     char    **file;
@@ -39,16 +39,17 @@ void    parsing(char *path)
     if (!ft_strrcmp(path, ".rt"))
     {
         printf("Error: the map file has to finish by .rt\n");
-        free_data();
+        return (1);
     }
     fd = open(path, O_RDONLY);
     if (fd == -1)
     {
         printf("Error: invald file\n");
-        free_data();
+        return (1);
     }
     file = read_file(fd);
     create_objects(file);
     free_string_array(file);
     close(fd);
+    return (0);
 }

@@ -14,7 +14,7 @@ int check_frange(float value, float min, float max)
     return (1);
 }
 
-int check_color(t_color color)
+int check_color(rgba color)
 {
     if (!check_frange(color.r, 0.0, 255.0) \
     || !check_frange(color.g, 0.0, 255.0) \

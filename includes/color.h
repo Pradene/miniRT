@@ -1,18 +1,12 @@
 #ifndef COLOR_H
 # define COLOR_H
 
-typedef struct s_color
-{
-    float   r;
-    float   g;
-    float   b;
-    float   a;
-}   t_color;
+typedef float rgba __attribute__((ext_vector_type(4)));
 
-t_color color(float r, float g, float b, float a);
+rgba    color(float r, float g, float b, float a);
 
-t_color atocolor(char *s);
+rgba    atocolor(char *s);
 
-int rgba_to_color(t_color c);
+int     colortoi(rgba c);
 
 #endif

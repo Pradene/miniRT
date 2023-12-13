@@ -1,5 +1,6 @@
 #include "../../includes/rt.h"
 
+// This function create the window to put the image on
 void    renderer(char *name)
 {
     t_data  *data;

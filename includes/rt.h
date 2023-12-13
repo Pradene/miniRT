@@ -47,6 +47,7 @@ int     free_data();
 // Rendering
 void    renderer(char *name);
 void    render();
+int     update(t_data *data);
 
 // Events
 int	    key(int key, t_data *data);

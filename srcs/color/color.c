@@ -1,8 +1,19 @@
 #include "../../includes/rt.h"
 
-t_color  atocolor(char *s)
+rgba    color(float r, float g, float b, float a)
 {
-    t_color c;
+    rgba c;
+
+    c.r = r;
+    c.g = g;
+    c.b = b;
+    c.a = a;
+    return (c);
+}
+
+rgba    atocolor(char *s)
+{
+    rgba    c;
     char    **colors;
 
     c.r = 0.0;
@@ -23,19 +34,8 @@ t_color  atocolor(char *s)
     return (c);
 }
 
-t_color color(float r, float g, float b, float a)
-{
-    t_color c;
-
-    c.r = r;
-    c.g = g;
-    c.b = b;
-    c.a = a;
-    return (c);
-}
-
-// transform a t_color struct into an integer color
-int rgba_to_color(t_color c)
+// transform a rgba struct into an integer color
+int colortoi(rgba c)
 {
     int color;
 

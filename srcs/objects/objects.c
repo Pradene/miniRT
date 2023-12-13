@@ -148,6 +148,7 @@ int plane(char **args)
     obj->object.type = PLANE;
     obj->object.origin = atov4(args[1], false);
     obj->object.rotation = atov4(args[2], true);
+    obj->object.rotation = normalize(obj->object.rotation);
     obj->object.color = atocolor(args[3]);
     add_objects(&data->objects, obj);
     return (1);
@@ -169,6 +170,7 @@ int cylinder(char **args)
     obj->object.type = CYLINDER;
     obj->object.origin = atov4(args[1], false);
     obj->object.rotation = atov4(args[2], true);
+    obj->object.rotation = normalize(obj->object.rotation);
     obj->object.diameter = ft_atof(args[3], &tmp);
     obj->object.height = ft_atof(args[4], &tmp);
     obj->object.color = atocolor(args[5]);

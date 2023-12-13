@@ -6,7 +6,7 @@
 
 #include "mlx_utils.h"
 
-void	pixel_put(t_image *img, int x, int y, t_color c);
+void	pixel_put(t_image *img, int x, int y, rgba c);
 
 int     string_array_size(char **sa);
 void    free_string_array(char **sa);

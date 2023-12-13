@@ -2,14 +2,11 @@
 
 vec4   atov4(char *s, bool vector)
 {
-    vec4   v;
-    char        *tmp;
-    char        **infos;
+    vec4    v;
+    char    *tmp;
+    char    **infos;
 
-    v.x = 0.0;
-    v.y = 0.0;
-    v.z = 0.0;
-    v.w = 0.0;
+    v = vector4(0, 0, 0, 0);
     infos = ft_split(s, ',');
     if (!infos)
         return (v);

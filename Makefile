@@ -11,10 +11,14 @@ OBJECTS	= camera.c \
 
 PARSING	= parse.c
 
-RAY		= intersect.c
+RAY		= intersect.c \
+		ray_cylinder.c \
+		ray_plane.c \
+		ray_sphere.c 
 
 RENDER	= render.c \
-		renderer.c
+		renderer.c \
+		update.c
 
 UTILS	= atof.c \
 		clamp.c \

@@ -15,9 +15,8 @@ void    calculate_rays(t_camera *cam)
         y = (float)(i / WIDTH + 0.5) / HEIGHT * 2 - 1.0;
         v = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
         v /= v.w;
-        vector_normalize(&v);
-        r = mat_vec_product(cam->m_inverse_view, v);
-        vector_normalize(&r);
+        v = normalize(v);
+        r = normalize(mat_vec_product(cam->m_inverse_view, v));
         cam->ray_direction[i] = r;
     }
 }
@@ -28,11 +27,9 @@ void    view_matrix(t_camera *cam, vec4 forward)
     vec4   up;
 
     up = vector4(0, 1, 0, 1);
-    vector_normalize(&forward);
-    right = vector_cross(&forward, &up);
-    vector_normalize(&right);
-    up = vector_cross(&right, &forward);
-    vector_normalize(&up);
+    forward = normalize(forward);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
     cam->m_view[0][0] = right.x;
     cam->m_view[0][1] = up.x;
     cam->m_view[0][2] = forward.x;
@@ -45,9 +42,9 @@ void    view_matrix(t_camera *cam, vec4 forward)
     cam->m_view[2][1] = up.z;
     cam->m_view[2][2] = forward.z;
     cam->m_view[2][3] = 0;
-    cam->m_view[3][0] = -vector_dot(&cam->origin, &right);
-    cam->m_view[3][1] = -vector_dot(&cam->origin, &up);
-    cam->m_view[3][2] = -vector_dot(&cam->origin, &forward);
+    cam->m_view[3][0] = -dot(cam->origin, right);
+    cam->m_view[3][1] = -dot(cam->origin, up);
+    cam->m_view[3][2] = -dot(cam->origin, forward);
     cam->m_view[3][3] = 1;
 }
 
@@ -99,6 +96,7 @@ int camera(char **args)
         return (0);
     data->camera.origin = atov4(args[1], false);
     data->camera.direction = atov4(args[2], true);
+    data->camera.direction = normalize(data->camera.direction);
     data->camera.fov = (int)ft_atof(args[3], &tmp);
     data->camera.created = 1;
 
@@ -141,7 +139,7 @@ void    rotate_camera(t_camera *cam, float angle_x, float angle_y)
     // mat_inverse(cam->m_view, &cam->m_inverse_view);
 
     cam->direction = mat_vec_product(rot, cam->direction);
-    vector_normalize(&cam->direction);
+    cam->direction = normalize(cam->direction);
     view_matrix(cam, cam->direction);
     mat_inverse(cam->m_view, &cam->m_inverse_view);
     calculate_rays(cam);
@@ -203,32 +201,26 @@ mat44   translate(t_camera *cam)
     vec4    right;
     vec4    forward;
 
-    forward = cam->direction;
-    up = vector4(0, 1, 0, 1);
-    vector_normalize(&forward);
-    right = vector_cross(&forward, &up);
-    vector_normalize(&right);
-    up = vector_cross(&right, &forward);
-    vector_normalize(&up);
     mat(&m);
+    up = vector4(0, 1, 0, 1);
+    forward = normalize(cam->direction);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
     m[0][0] = 1;
     m[0][1] = 0;
     m[0][2] = 0;
     m[0][3] = 0;
-
     m[1][0] = 0;
     m[1][1] = 1;
     m[1][2] = 0;
     m[1][3] = 0;
-
     m[2][0] = 0;
     m[2][1] = 0;
     m[2][2] = 1;
     m[2][3] = 0;
-
-    m[3][0] = -vector_dot(&cam->origin, &right);
-    m[3][1] = -vector_dot(&cam->origin, &up);
-    m[3][2] = -vector_dot(&cam->origin, &forward);
+    m[3][0] = -dot(cam->origin, right);
+    m[3][1] = -dot(cam->origin, up);
+    m[3][2] = -dot(cam->origin, forward);
     m[3][3] = 1;
     return (m);
 }
@@ -257,7 +249,7 @@ quat angleAxis(float angle, vec4 axis) {
     quat result;
 
     // Normalize the axis
-    vector_normalize(&axis);
+    axis = normalize(axis);
 
     // Calculate half angle
     float halfAngle = angle * 0.5f;
@@ -288,6 +280,6 @@ vec4    rotate(vec4 v, quat rotationQuat) {
 
     // Extract the rotated vector from the quat
     vec4 result = vector4(resultQuat.x, resultQuat.y, resultQuat.z, 1);
-    vector_normalize(&result);
+    result = normalize(result);
     return (result);
 }

@@ -1,5 +1,13 @@
 #include "../includes/rt.h"
 
+// This function initialize a sort of global structure data and return it
+t_data  *get_data()
+{
+    static t_data   data;
+
+    return (&data);
+}
+
 void    initialisation()
 {
     t_data  *data;
@@ -9,13 +17,6 @@ void    initialisation()
     data->camera.created = 0;
     data->light.created = 0;
     data->alight.created = 0;
-}
-
-t_data  *get_data()
-{
-    static t_data   data;
-
-    return (&data);
 }
 
 int free_data()
@@ -43,7 +44,8 @@ int main(int ac, char **av)
         return (1);
     }
     initialisation();
-    parsing(av[1]);
+    if (parsing(av[1]))
+        return (1);
     renderer("miniRT");
     render();
     free_data();

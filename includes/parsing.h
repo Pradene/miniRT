@@ -5,6 +5,6 @@
 # include <sys/stat.h>
 # include <fcntl.h>
 
-void    parsing(char *path);
+int parsing(char *path);
 
 #endif

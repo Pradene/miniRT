@@ -14,12 +14,9 @@ int	key(int key, t_data *data)
 	// printf("%d\n", key);
 
 	up = vector4(0, 1, 0, 1);
-	forward = data->camera.direction;
-	vector_normalize(&forward);
-    right = vector_cross(&forward, &up);
-    vector_normalize(&right);
-    up = vector_cross(&right, &forward);
-    vector_normalize(&up);
+	forward = normalize(data->camera.direction);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
 
 	// Movement
 	if (key == 65307)

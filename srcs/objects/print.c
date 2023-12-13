@@ -1,6 +1,6 @@
 #include "../../includes/rt.h"
 
-void    print_color(t_color color)
+void    print_color(rgba color)
 {
     printf("    color: %lf, %lf, %lf\n", \
     color.r, color.g, color.b);
