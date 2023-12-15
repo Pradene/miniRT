@@ -5,28 +5,31 @@ void    calculate_rays(t_camera *cam)
     int     i;
     float   x;
     float   y;
-    vec4    v;
+    vec4    tmp;
+    vec3    r;
 
     i = -1;
     while (++i < HEIGHT * WIDTH)
     {
         x = map(i % WIDTH + 0.5, vector2(0, WIDTH), vector2(-1, 1));
         y = map(i / WIDTH + 0.5, vector2(0, HEIGHT), vector2(-1, 1));
-        v = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
-        v = v4_normalize(v / v.w);
-        cam->ray_direction[i] = v4_normalize(mat_vec_product(cam->m_inverse_view, v));
+        tmp = mat_vec_product(cam->m_inverse_projection, vector4(x, y, 1, 1));
+        r = normalize(tmp.xyz / tmp.w);
+        tmp = mat_vec_product(cam->m_inverse_view, vector4(r.x, r.y, r.z, 0));
+        r = tmp.xyz;
+        cam->ray_direction[i] = r;
     }
 }
 
-void    view_matrix(t_camera *cam, vec4 forward)
+void    view_matrix(t_camera *cam, vec3 forward)
 {
-    vec4   right;
-    vec4   up;
+    vec3   right;
+    vec3   up;
 
-    up = vector4(0, 1, 0, 1);
-    forward = v4_normalize(forward);
-    right = v4_normalize(cross(forward, up));
-    up = v4_normalize(cross(right, forward));
+    up = vector3(0, 1, 0);
+    forward = normalize(forward);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
     cam->m_view[0][0] = right.x;
     cam->m_view[0][1] = up.x;
     cam->m_view[0][2] = forward.x;
@@ -93,9 +96,9 @@ int camera(char **args)
         return (0);
     if (data->camera.created)
         return (0);
-    cam->origin = atov4(args[1], false);
-    cam->direction = atov4(args[2], true);
-    cam->direction = v4_normalize(cam->direction);
+    cam->origin = atov3(args[1]);
+    cam->direction = atov3(args[2]);
+    cam->direction = normalize(cam->direction);
     cam->fov = (int)ft_atof(args[3], &tmp);
     cam->created = 1;
 
@@ -112,36 +115,36 @@ int camera(char **args)
     return (1);
 }
 
-void    rotate_camera(t_camera *cam, float angle_x, float angle_y)
-{
-    mat44   rot;
-    float   angle_z;
+// void    rotate_camera(t_camera *cam, float angle_x, float angle_y)
+// {
+//     mat44   rot;
+//     float   angle_z;
 
-    angle_z = 0;
-    rot[0][0] = cos(angle_y) * cos(angle_z);
-    rot[0][1] = sin(angle_x) * sin(angle_y) * cos(angle_z) - cos(angle_x) * sin(angle_z); 
-    rot[0][2] = cos(angle_x) * sin(angle_y) * cos(angle_z) + sin(angle_x) * sin(angle_z); 
-    rot[0][3] = 0;
-    rot[1][0] = cos(angle_y) * sin(angle_z);
-    rot[1][1] = sin(angle_x) * sin(angle_y) * sin(angle_z) + cos(angle_x) * cos(angle_z);
-    rot[1][2] = cos(angle_x) * sin(angle_y) * sin(angle_z) - sin(angle_x) * cos(angle_z); 
-    rot[1][0] = 0;
-    rot[2][0] = -sin(angle_y);
-    rot[2][1] = sin(angle_x) * cos(angle_y);
-    rot[2][2] = cos(angle_x) * cos(angle_y);
-    rot[2][3] = 0;
-    rot[3][0] = 0;
-    rot[3][1] = 0;
-    rot[3][2] = 0;
-    rot[3][3] = 1;
-    // cam->m_view = mat_product(cam->m_view, rot);
-    // mat_inverse(cam->m_view, &cam->m_inverse_view);
+//     angle_z = 0;
+//     rot[0][0] = cos(angle_y) * cos(angle_z);
+//     rot[0][1] = sin(angle_x) * sin(angle_y) * cos(angle_z) - cos(angle_x) * sin(angle_z); 
+//     rot[0][2] = cos(angle_x) * sin(angle_y) * cos(angle_z) + sin(angle_x) * sin(angle_z); 
+//     rot[0][3] = 0;
+//     rot[1][0] = cos(angle_y) * sin(angle_z);
+//     rot[1][1] = sin(angle_x) * sin(angle_y) * sin(angle_z) + cos(angle_x) * cos(angle_z);
+//     rot[1][2] = cos(angle_x) * sin(angle_y) * sin(angle_z) - sin(angle_x) * cos(angle_z); 
+//     rot[1][0] = 0;
+//     rot[2][0] = -sin(angle_y);
+//     rot[2][1] = sin(angle_x) * cos(angle_y);
+//     rot[2][2] = cos(angle_x) * cos(angle_y);
+//     rot[2][3] = 0;
+//     rot[3][0] = 0;
+//     rot[3][1] = 0;
+//     rot[3][2] = 0;
+//     rot[3][3] = 1;
+//     // cam->m_view = mat_product(cam->m_view, rot);
+//     // mat_inverse(cam->m_view, &cam->m_inverse_view);
 
-    cam->direction = mat_vec_product(rot, cam->direction);
-    cam->direction = v4_normalize(cam->direction);
-    calculate_m_view(cam);
-    calculate_rays(cam);
-}
+//     cam->direction = mat_vec_product(rot, cam->direction);
+//     cam->direction = normalize(cam->direction);
+//     calculate_m_view(cam);
+//     calculate_rays(cam);
+// }
 
 
 
@@ -195,15 +198,15 @@ void quaternionToMatrix(quat q, mat44 *m)
 mat44   translate(t_camera *cam)
 {
     mat44   m;
-    vec4    up;
-    vec4    right;
-    vec4    forward;
+    vec3    up;
+    vec3    right;
+    vec3    forward;
 
-    mat(&m);
-    up = vector4(0, 1, 0, 1);
-    forward = v4_normalize(cam->direction);
-    right = v4_normalize(cross(forward, up));
-    up = v4_normalize(cross(right, forward));
+    m = mat();
+    up = vector3(0, 1, 0);
+    forward = normalize(cam->direction);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
     m[0][0] = 1;
     m[0][1] = 0;
     m[0][2] = 0;
@@ -243,11 +246,11 @@ quat    multiply_quat(quat q1, quat q2)
 }
 
 // Function to create a rotation quat from an angle (in radians) and an axis
-quat angleAxis(float angle, vec4 axis) {
+quat angleAxis(float angle, vec3 axis) {
     quat result;
 
     // Normalize the axis
-    axis = v4_normalize(axis);
+    axis = normalize(axis);
 
     // Calculate half angle
     float halfAngle = angle * 0.5f;
@@ -266,7 +269,7 @@ quat angleAxis(float angle, vec4 axis) {
 }
 
 // Function to rotate a 3D vector using a quat
-vec4    rotate(vec4 v, quat rotationQuat) {
+vec3    rotate(vec3 v, quat rotationQuat) {
     // Convert the vector to a quat
     quat vectorQuat = {v.x, v.y, v.z, 0.0f};
 
@@ -277,7 +280,7 @@ vec4    rotate(vec4 v, quat rotationQuat) {
     );
 
     // Extract the rotated vector from the quat
-    vec4 result = vector4(resultQuat.x, resultQuat.y, resultQuat.z, 1);
-    result = v4_normalize(result);
+    vec3 result = vector3(resultQuat.x, resultQuat.y, resultQuat.z);
+    result = normalize(result);
     return (result);
 }

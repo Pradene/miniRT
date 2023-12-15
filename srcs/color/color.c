@@ -24,13 +24,13 @@ rgba    atocolor(char *s)
     if (!colors)
         return (c);
     if (string_array_size(colors) < 3 || string_array_size(colors) > 4)
-        return (free_string_array(colors), c);
+        return (string_array_free(colors), c);
     c.r = ((float)ft_atoi(colors[0]) / (float)255);
     c.g = ((float)ft_atoi(colors[1]) / (float)255);
     c.b = ((float)ft_atoi(colors[2]) / (float)255);
     if (string_array_size(colors) == 4)
         c.a = ft_atof(colors[3], NULL);
-    free_string_array(colors);
+    string_array_free(colors);
     return (c);
 }
 

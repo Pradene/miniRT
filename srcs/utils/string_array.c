@@ -12,7 +12,7 @@ int     string_array_size(char **sa)
     return (i);
 }
 
-void    copy_string_array(char **dest, char **src)
+void    string_array_copy(char **dest, char **src)
 {
     int i;
 
@@ -24,7 +24,7 @@ void    copy_string_array(char **dest, char **src)
     dest[i] = NULL;
 }
 
-void    free_string_array(char **sa)
+void    string_array_free(char **sa)
 {
     int i;
 

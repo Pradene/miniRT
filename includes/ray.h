@@ -6,8 +6,8 @@
 
 typedef struct s_ray
 {
-    vec4   origin;
-    vec4   direction;
+    vec3   origin;
+    vec3   direction;
 }   t_ray;
 
 t_hit   miss_ray();

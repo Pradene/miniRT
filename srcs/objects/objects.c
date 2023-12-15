@@ -103,7 +103,7 @@ int light(char **args)
         return (0);
     if (data->light.created)
         return (0);
-    data->light.origin = atov4(args[1], false);
+    data->light.origin = atov3(args[1]);
     data->light.brightness = ft_atof(args[2], &tmp);
     data->light.color = atocolor(args[3]);
     data->light.created = 1;
@@ -126,7 +126,7 @@ int sphere(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = SPHERE;
-    obj->object.origin = atov4(args[1], false);
+    obj->object.origin = atov3(args[1]);
     obj->object.diameter = ft_atof(args[2], &tmp);
     obj->object.color = atocolor(args[3]);
     add_objects(&data->objects, obj);
@@ -146,9 +146,9 @@ int plane(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = PLANE;
-    obj->object.origin = atov4(args[1], false);
-    obj->object.rotation = atov4(args[2], true);
-    obj->object.rotation = v4_normalize(obj->object.rotation);
+    obj->object.origin = atov3(args[1]);
+    obj->object.rotation = atov3(args[2]);
+    obj->object.rotation = normalize(obj->object.rotation);
     obj->object.color = atocolor(args[3]);
     add_objects(&data->objects, obj);
     return (1);
@@ -168,9 +168,9 @@ int cylinder(char **args)
         return (0);
     obj->next = NULL;
     obj->object.type = CYLINDER;
-    obj->object.origin = atov4(args[1], false);
-    obj->object.rotation = atov4(args[2], true);
-    obj->object.rotation = v4_normalize(obj->object.rotation);
+    obj->object.origin = atov3(args[1]);
+    obj->object.rotation = atov3(args[2]);
+    obj->object.rotation = normalize(obj->object.rotation);
     obj->object.diameter = ft_atof(args[3], &tmp);
     obj->object.height = ft_atof(args[4], &tmp);
     obj->object.color = atocolor(args[5]);
@@ -197,12 +197,12 @@ int create_object(char *line)
     if (!args)
         return (0);
     if (!args[0])
-        return (free_string_array(args), 1);
+        return (string_array_free(args), 1);
     type = check_obj_type(args[0]);
     if (type == ERROR)
-        return (free_string_array(args), 0);
+        return (string_array_free(args), 0);
     status = create_object_type(args, type);
-    free_string_array(args);
+    string_array_free(args);
     return (status);
 }
 

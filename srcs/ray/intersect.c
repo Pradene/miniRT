@@ -3,7 +3,7 @@
 rgba    get_color(t_ray ray, t_hit *h)
 {
     t_data      *data;
-    vec4        dir;
+    vec3        dir;
     rgba        c;
     float       ratio;
 
@@ -14,16 +14,16 @@ rgba    get_color(t_ray ray, t_hit *h)
     data = get_data();
     ray.origin = h->w_position + h->normal * 0.0001;
     ray.direction = -(ray.origin - data->light.origin);
-    ray.direction = v4_normalize(ray.direction);
+    ray.direction = normalize(ray.direction);
     float   d = ray_hit(ray).distance;
     if (d > 0)
     {
-        c.rgb = h->object->color.rgb * data->alight.brightness;
+        c = h->object->color * data->alight.brightness;
         return (c);
     }
-    dir = -1 * v4_normalize(h->w_position - data->light.origin);
+    dir = -1 * normalize(h->w_position - data->light.origin);
     ratio = fmaxf(0.0, dot(h->normal, dir));
-    c.rgb = h->object->color.rgb * fminf(1.0, ratio + data->alight.brightness);
+    c = h->object->color * fminf(1.0, ratio + data->alight.brightness);
     return (c);
 }
 

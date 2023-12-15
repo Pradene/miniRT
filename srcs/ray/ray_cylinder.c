@@ -7,13 +7,13 @@ t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
     float   b;
     float   c;
     float   discriminant;
-    vec4    tmp1;
-    vec4    tmp2;
+    vec3    tmp1;
+    vec3    tmp2;
     float   t;
 
     tmp1 = r.direction - dot(r.direction, obj->rotation) * obj->rotation;
-    tmp2 = r.origin - obj->origin;
-    tmp2 = tmp2 - dot(tmp2, obj->rotation) * obj->rotation;
+    tmp2 = r.origin - obj->origin \
+    - dot(r.origin - obj->origin, obj->rotation) * obj->rotation;
 
     a = dot(tmp1, tmp1);
     b = 2 * dot(tmp1, tmp2);
@@ -32,29 +32,30 @@ t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
 
         h.normal = dot(h.w_position - obj->origin, obj->rotation) * obj->rotation;
         h.normal = h.w_position - obj->origin - h.normal;
-        h.normal = v4_normalize(h.normal);
+        h.normal = normalize(h.normal);
+        
         return (h);
     }
+
     t_obj   o;
+    t_hit   ht;
 
     o = *obj;
     o.origin = obj->origin + obj->rotation * obj->height / 2;
-    t_hit   ht;
-
     ht = ray_plane_intersection(&o, r);
-    if (dot(o.rotation, ht.w_position - o.origin) == 0 \
-    && dot(ht.w_position - o.origin, ht.w_position - o.origin) < powf(obj->diameter / 2, 2.0))
+    if (dot(ht.w_position - o.origin, ht.w_position - o.origin) < powf(obj->diameter / 2, 2.0))
     {
+        ht.object = obj;
         return (ht);
     }
 
     o.origin = obj->origin - obj->rotation * obj->height / 2;
-
     ht = ray_plane_intersection(&o, r);
-    if (dot(o.rotation, ht.w_position - o.origin) == 0 \
-    && dot(ht.w_position - o.origin, ht.w_position - o.origin) < powf(obj->diameter / 2, 2.0))
+    if (dot(ht.w_position - o.origin, ht.w_position - o.origin) < powf(obj->diameter / 2, 2.0))
     {
+        ht.object = obj;
         return (ht);
     }
+
     return (miss_ray());
 }

@@ -29,7 +29,7 @@ UTILS	= atof.c \
 		radian.c \
 		string_array.c
 
-VECTOR	= atov4.c \
+VECTOR	= atov3.c \
 		cross.c \
 		dot.c \
 		normalize.c \

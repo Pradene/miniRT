@@ -5,18 +5,18 @@
 int	key(int key, t_data *data)
 {
 	float	x = 0;
-	vec4    right;
-    vec4    up;
-    vec4    forward;
+	vec3    right;
+    vec3    up;
+    vec3    forward;
 	quat	q;
 	bool	r;
 
 	// printf("%d\n", key);
 
-	up = vector4(0, 1, 0, 1);
-	forward = v4_normalize(data->camera.direction);
-    right = v4_normalize(cross(forward, up));
-    up = v4_normalize(cross(right, forward));
+	up = vector3(0, 1, 0);
+	forward = normalize(data->camera.direction);
+    right = normalize(cross(forward, up));
+    up = normalize(cross(right, forward));
 
 	// Movement
 	if (key == 65307)
@@ -67,7 +67,7 @@ int	key(int key, t_data *data)
 	if (r)
 	{
 		float radx = radian(x);
-		q = angleAxis(radx, vector4(0, 1, 0, 1));
+		q = angleAxis(radx, vector3(0, 1, 0));
 		q = normalize_quat(q);
 
 		data->camera.direction = rotate(data->camera.direction, q);

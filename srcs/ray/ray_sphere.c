@@ -7,7 +7,7 @@ t_hit   ray_sphere_intersection(t_obj *obj, t_ray r)
     float   c;
     float   discriminant;
     t_hit   h;
-    vec4    tmp;
+    vec3    tmp;
 
     tmp = r.origin - obj->origin;
     a = dot(r.direction, r.direction);
@@ -19,7 +19,7 @@ t_hit   ray_sphere_intersection(t_obj *obj, t_ray r)
     h.distance = (-b - sqrt(discriminant)) / (2.0 * a);
     h.object = obj;
     h.w_position = tmp + r.direction * h.distance;
-    h.normal = v4_normalize(h.w_position);
+    h.normal = normalize(h.w_position);
     h.w_position += obj->origin;
     return (h);
 }

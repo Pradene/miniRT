@@ -19,8 +19,8 @@ static char **read_file(int fd)
             line[ft_strlen(line) - 1] = '\0';
         tmp = malloc(sizeof(char *) * ((++i + 1) + 1));
         if (!tmp)
-            return (free_string_array(file), free(line), NULL);
-        copy_string_array(tmp, file);
+            return (string_array_free(file), free(line), NULL);
+        string_array_copy(tmp, file);
         free(file);
         tmp[i] = line;
         tmp[i + 1] = NULL;
@@ -53,11 +53,11 @@ int parsing(char *path)
     if (create_objects(file))
     {
         printf("Error: couldn't parse %s file\n", path);
-        free_string_array(file);
+        string_array_free(file);
         close(fd);
         return (1);
     }
-    free_string_array(file);
+    string_array_free(file);
     close(fd);
     return (0);
 }
