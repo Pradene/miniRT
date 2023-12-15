@@ -4,19 +4,19 @@
 
 int	key(int key, t_data *data)
 {
-	float x = 0;
-	vec4   right;
-    vec4   up;
-    vec4   forward;
+	float	x = 0;
+	vec4    right;
+    vec4    up;
+    vec4    forward;
 	quat	q;
 	bool	r;
 
 	// printf("%d\n", key);
 
 	up = vector4(0, 1, 0, 1);
-	forward = normalize(data->camera.direction);
-    right = normalize(cross(forward, up));
-    up = normalize(cross(right, forward));
+	forward = v4_normalize(data->camera.direction);
+    right = v4_normalize(cross(forward, up));
+    up = v4_normalize(cross(right, forward));
 
 	// Movement
 	if (key == 65307)
@@ -72,8 +72,7 @@ int	key(int key, t_data *data)
 
 		data->camera.direction = rotate(data->camera.direction, q);
 
-    	view_matrix(&data->camera, data->camera.direction);
-    	mat_inverse(data->camera.m_view, &data->camera.m_inverse_view);
+		calculate_m_view(&data->camera);
     	calculate_rays(&data->camera);
 	}
 	

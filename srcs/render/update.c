@@ -8,14 +8,13 @@ void    trace(t_image *img, t_camera *cam)
     t_ray   ray;
     rgba    color;
 
-    i = 0;
+    i = -1;
     ray.origin = cam->origin;
-    while (i < HEIGHT * WIDTH)
+    while (++i < HEIGHT * WIDTH)
     {
         ray.direction = cam->ray_direction[i];
         color = intersect(ray);
         pixel_put(img, i % WIDTH, i / WIDTH, color);
-        ++i;
     }
 }
 

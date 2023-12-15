@@ -37,11 +37,6 @@ int parsing(char *path)
     t_data  *data;
 
     data = get_data();
-    if (!ft_strrcmp(path, ".rt"))
-    {
-        printf("Error: the map file has to finish by .rt\n");
-        return (1);
-    }
     fd = open(path, O_RDONLY);
     if (fd == -1)
     {
@@ -49,7 +44,19 @@ int parsing(char *path)
         return (1);
     }
     file = read_file(fd);
-    create_objects(file);
+    if (!file)
+    {
+        printf("Error: couldn't read %s file\n", path);
+        close(fd);
+        return (1);
+    }
+    if (create_objects(file))
+    {
+        printf("Error: couldn't parse %s file\n", path);
+        free_string_array(file);
+        close(fd);
+        return (1);
+    }
     free_string_array(file);
     close(fd);
     return (0);

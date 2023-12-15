@@ -14,6 +14,10 @@ void    copy_string_array(char **dest, char **src);
 
 float   ft_atof(char *s, char **end);
 
+float   map(float v, vec2 range, vec2 nrange);
+
+float   distance(vec4 p1, vec4 p2);
+
 float   clamp(float v, float min, float max);
 
 float   radian(float angle);

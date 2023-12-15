@@ -66,6 +66,6 @@ int     check_brightness(float brightness);
 int     check_fov(int fov);
 int     check_direction(vec4 direction);
 
-void    create_objects(char **sa);
+int     create_objects(char **sa);
 
 #endif

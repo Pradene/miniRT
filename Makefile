@@ -2,7 +2,8 @@ COLOR	= color.c
 
 EVENT	= key.c
 
-matrix	= matrix.c
+matrix	= matrix_inverse.c \
+		matrix.c
 
 OBJECTS	= camera.c \
 		check.c \
@@ -22,6 +23,8 @@ RENDER	= render.c \
 
 UTILS	= atof.c \
 		clamp.c \
+		distance.c \
+		map.c \
 		pixel_put.c \
 		radian.c \
 		string_array.c

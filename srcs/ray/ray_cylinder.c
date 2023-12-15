@@ -32,7 +32,7 @@ t_hit   ray_cylinder_intersection(t_obj *obj, t_ray r)
 
         h.normal = dot(h.w_position - obj->origin, obj->rotation) * obj->rotation;
         h.normal = h.w_position - obj->origin - h.normal;
-        h.normal = normalize(h.normal);
+        h.normal = v4_normalize(h.normal);
         return (h);
     }
     t_obj   o;

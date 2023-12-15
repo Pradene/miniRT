@@ -38,9 +38,9 @@ int free_data()
 
 int main(int ac, char **av)
 {
-    if (ac != 2)
+    if (ac != 2 || !ft_strrcmp(av[1], ".rt"))
     {
-        printf("You have to run the program with: ./minirt map.rt\n");
+        printf("Error: You have to run the program with: ./minirt map.rt\n");
         return (1);
     }
     initialisation();

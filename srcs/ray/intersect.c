@@ -1,10 +1,5 @@
 #include "../../includes/rt.h"
 
-float   distance(vec4 p1, vec4 p2)
-{
-    return (2 * (p1.x * p2.x) + 2 * (p1.y * p2.y) + 2 * (p1.z * p2.z));
-}
-
 rgba    get_color(t_ray ray, t_hit *h)
 {
     t_data      *data;
@@ -19,14 +14,14 @@ rgba    get_color(t_ray ray, t_hit *h)
     data = get_data();
     ray.origin = h->w_position + h->normal * 0.0001;
     ray.direction = -(ray.origin - data->light.origin);
-    ray.direction = normalize(ray.direction);
+    ray.direction = v4_normalize(ray.direction);
     float   d = ray_hit(ray).distance;
     if (d > 0)
     {
         c.rgb = h->object->color.rgb * data->alight.brightness;
         return (c);
     }
-    dir = -1 * normalize(h->w_position - data->light.origin);
+    dir = -1 * v4_normalize(h->w_position - data->light.origin);
     ratio = fmaxf(0.0, dot(h->normal, dir));
     c.rgb = h->object->color.rgb * fminf(1.0, ratio + data->alight.brightness);
     return (c);
