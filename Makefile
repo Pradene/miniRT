@@ -1,6 +1,7 @@
 COLOR	= color.c
 
-EVENT	= key.c
+EVENT	= key.c \
+		mouse.c
 
 matrix	= matrix_inverse.c \
 		matrix.c

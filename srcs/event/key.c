@@ -1,24 +1,32 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/10 11:40:32 by lpradene          #+#    #+#             */
+/*   Updated: 2024/01/10 11:40:36 by lpradene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/rt.h"
 
 #define MOVEMENT_SPEED 0.002
 
 int	key(int key, t_data *data)
 {
-	float	x = 0;
-	vec3    right;
-    vec3    up;
-    vec3    forward;
+	float	x;
+	vec3	right;
+	vec3	up;
+	vec3	forward;
 	quat	q;
 	bool	r;
 
-	// printf("%d\n", key);
-
 	up = vector3(0, 1, 0);
 	forward = normalize(data->camera.direction);
-    right = normalize(cross(forward, up));
-    up = normalize(cross(right, forward));
-
-	// Movement
+	right = normalize(cross(forward, up));
+	up = normalize(cross(right, forward));
 	if (key == 65307)
 		free_data();
 	else if (key == 65361)
@@ -51,7 +59,7 @@ int	key(int key, t_data *data)
 		data->camera.origin += up * data->et * MOVEMENT_SPEED;
 		calculate_m_view(&data->camera);
 	}
-
+	x = 0;
 	r = false;
 	if (key == 97)
 	{
@@ -63,18 +71,13 @@ int	key(int key, t_data *data)
 		r = true;
 		x += 1;
 	}
-
 	if (r)
 	{
-		float radx = radian(x);
-		q = angleAxis(radx, vector3(0, 1, 0));
+		q = angle_axis(radian(x), vector3(0, 1, 0));
 		q = normalize_quat(q);
-
 		data->camera.direction = rotate(data->camera.direction, q);
-
 		calculate_m_view(&data->camera);
-    	calculate_rays(&data->camera);
+		calculate_rays(&data->camera);
 	}
-	
 	return (0);
 }

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rt.h                                               :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/01/10 12:56:59 by lpradene          #+#    #+#             */
+/*   Updated: 2024/01/10 13:05:30 by lpradene         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef RT_H
 # define RT_H
 
@@ -21,7 +33,7 @@
 # include "utils.h"
 # include "vector.h"
 
-#include "../libft/libft.h"
+# include "../libft/libft.h"
 
 # include "../mlx_linux/mlx.h"
 # include "../mlx_linux/mlx_int.h"
@@ -30,26 +42,27 @@
 
 typedef struct s_data
 {
-    t_obj_list  *objects;
-    t_camera    camera;
-    t_light     light;
-    t_alight    alight;
-    void        *id;
-    void        *win;
-    float       et;
-    t_image     img;
-}   t_data;
+	t_obj_list	*objects;
+	t_camera	camera;
+	t_light		light;
+	t_alight	alight;
+	void		*id;
+	void		*win;
+	float		et;
+	t_image		img;
+}	t_data;
 
 // Data
-t_data  *get_data();
-int     free_data();
+t_data	*get_data(void);
+int		free_data(void);
 
 // Rendering
-void    renderer(char *name);
-void    render();
-int     update(t_data *data);
+void	renderer(char *name);
+void	render(void);
+int		update(t_data *data);
 
 // Events
-int	    key(int key, t_data *data);
+int		key(int key, t_data *data);
+int		mouse(int button, int x, int y, t_data *data);
 
 #endif
