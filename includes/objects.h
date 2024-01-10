@@ -76,7 +76,7 @@ int		check_frange(float value, float min, float max);
 int		check_color(rgba color);
 int		check_brightness(float brightness);
 int		check_fov(int fov);
-int		check_direction(vec3 direction);
+int		check_rotation(vec3 direction);
 
 int		create_objects(char **sa);
 

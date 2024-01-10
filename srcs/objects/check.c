@@ -28,9 +28,9 @@ int	check_frange(float value, float min, float max)
 
 int	check_color(rgba color)
 {
-	if (!check_frange(color.r, 0.0, 255.0) \
-	|| !check_frange(color.g, 0.0, 255.0) \
-	|| !check_frange(color.b, 0.0, 255.0) \
+	if (!check_frange(color.r, 0.0, 1.0) \
+	|| !check_frange(color.g, 0.0, 1.0) \
+	|| !check_frange(color.b, 0.0, 1.0) \
 	|| !check_frange(color.a, 0.0, 1.0))
 		return (0);
 	return (1);
@@ -50,7 +50,7 @@ int	check_fov(int fov)
 	return (1);
 }
 
-int	check_direction(vec3 direction)
+int	check_rotation(vec3 direction)
 {
 	if (!check_frange(direction.x, -1.0, 1.0) \
 	|| !check_frange(direction.y, -1.0, 1.0) \

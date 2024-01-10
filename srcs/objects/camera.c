@@ -88,7 +88,7 @@ void	projection_matrix(t_camera *cam, int near, int far, int fov)
 
 int	check_camera(t_camera *camera)
 {
-	if (!check_fov(camera->fov) || !check_direction(camera->direction))
+	if (!check_fov(camera->fov) || !check_rotation(camera->direction))
 		return (0);
 	return (1);
 }

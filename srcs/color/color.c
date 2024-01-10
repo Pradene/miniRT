@@ -26,22 +26,27 @@ rgba	color(float r, float g, float b, float a)
 rgba	atocolor(char *s)
 {
 	rgba	c;
+	float	f;
+	char	*tmp;
 	char	**colors;
 
-	c.r = 0.0;
-	c.g = 0.0;
-	c.b = 0.0;
-	c.a = 1.0;
 	colors = ft_split(s, ',');
 	if (!colors)
-		return (c);
-	if (string_array_size(colors) < 3 || string_array_size(colors) > 4)
-		return (string_array_free(colors), c);
-	c.r = ((float)ft_atoi(colors[0]) / (float)255);
-	c.g = ((float)ft_atoi(colors[1]) / (float)255);
-	c.b = ((float)ft_atoi(colors[2]) / (float)255);
-	if (string_array_size(colors) == 4)
-		c.a = ft_atof(colors[3], NULL);
+		return (color(-1, -1, -1, -1));
+	if (string_array_size(colors) != 3)
+		return (string_array_free(colors), color(-1, -1, -1, -1));
+	f = ft_atof(colors[0], &tmp);
+	if (tmp != colors[0] + ft_strlen(colors[0]))
+		return (color(-1, -1, -1, -1));
+	c.r = (f / 255.0);
+	f = ft_atof(colors[1], &tmp);
+	if (tmp != colors[1] + ft_strlen(colors[1]))
+		return (color(-1, -1, -1, -1));
+	c.g = (f / (float)255);
+	f = ft_atof(colors[2], &tmp);
+	if (tmp != colors[2] + ft_strlen(colors[2]))
+		return (color(-1, -1, -1, -1));
+	c.b = (f / (float)255);
 	string_array_free(colors);
 	return (c);
 }

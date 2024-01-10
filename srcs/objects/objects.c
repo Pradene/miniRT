@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/10 12:11:14 by lpradene          #+#    #+#             */
-/*   Updated: 2024/01/10 12:13:18 by lpradene         ###   ########.fr       */
+/*   Created: 2024/01/10 16:52:42 by lpradene          #+#    #+#             */
+/*   Updated: 2024/01/10 16:53:25 by lpradene         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,12 @@ static t_obj_list	*last_objects(t_obj_list *lst)
 
 void	add_objects(t_obj_list **lst, t_obj_list *new)
 {
-	t_obj_list	*tmp;
-
 	if (!lst)
 		return ;
 	if (*lst)
-	{
-		tmp = last_objects(*lst);
-		tmp->next = new;
-	}
+		last_objects(*lst)->next = new;
 	else
-	{
 		*lst = new;
-	}
 }
 
 t_obj_type	check_obj_type(char *type)
@@ -115,11 +108,21 @@ int	light(char **args)
 		return (0);
 	if (data->light.created)
 		return (0);
-	data->light.origin = atov3(args[1]);
+	if (!atovec3(args[1], &data->light.origin))
+		return (0);
 	data->light.brightness = ft_atof(args[2], &tmp);
+	if (tmp != args[2] + ft_strlen(args[2]))
+		return (0);
 	data->light.color = atocolor(args[3]);
 	data->light.created = 1;
 	if (!check_light(data->light))
+		return (0);
+	return (1);
+}
+
+int	check_sphere(t_obj *obj)
+{
+	if (!check_color(obj->color) || obj->diameter < 0)
 		return (0);
 	return (1);
 }
@@ -138,10 +141,22 @@ int	sphere(char **args)
 		return (0);
 	obj->next = NULL;
 	obj->object.type = SPHERE;
-	obj->object.origin = atov3(args[1]);
+	if (!atovec3(args[1], &obj->object.origin))
+		return (free(obj), 0);
 	obj->object.diameter = ft_atof(args[2], &tmp);
+	if (tmp != args[2] + ft_strlen(args[2]))
+		return (free(obj), 0);
 	obj->object.color = atocolor(args[3]);
+	if (!check_sphere(&obj->object))
+		return (free(obj), 0);
 	add_objects(&data->objects, obj);
+	return (1);
+}
+
+int	check_plane(t_obj *obj)
+{
+	if (!check_color(obj->color) || !check_rotation(obj->rotation))
+		return (0);
 	return (1);
 }
 
@@ -158,11 +173,23 @@ int	plane(char **args)
 		return (0);
 	obj->next = NULL;
 	obj->object.type = PLANE;
-	obj->object.origin = atov3(args[1]);
-	obj->object.rotation = atov3(args[2]);
-	obj->object.rotation = normalize(obj->object.rotation);
+	if (!atovec3(args[1], &obj->object.origin))
+		return (free(obj), 0);
+	if (!atovec3(args[2], &obj->object.rotation))
+		return (free(obj), 0);
 	obj->object.color = atocolor(args[3]);
+	if (!check_plane(&obj->object))
+		return (free(obj), 0);
+	obj->object.rotation = normalize(obj->object.rotation);
 	add_objects(&data->objects, obj);
+	return (1);
+}
+
+int	check_cylinder(t_obj *obj)
+{
+	if (!check_color(obj->color) || !check_rotation(obj->rotation) \
+	|| obj->height < 0 || obj->diameter < 0)
+		return (0);
 	return (1);
 }
 
@@ -180,12 +207,20 @@ int	cylinder(char **args)
 		return (0);
 	obj->next = NULL;
 	obj->object.type = CYLINDER;
-	obj->object.origin = atov3(args[1]);
-	obj->object.rotation = atov3(args[2]);
-	obj->object.rotation = normalize(obj->object.rotation);
+	if (!atovec3(args[1], &obj->object.origin))
+		return (free(obj), 0);
+	if (!atovec3(args[2], &obj->object.rotation))
+		return (free(obj), 0);
 	obj->object.diameter = ft_atof(args[3], &tmp);
+	if (tmp != args[3] + ft_strlen(args[3]))
+		return (free(obj), 0);
 	obj->object.height = ft_atof(args[4], &tmp);
+	if (tmp != args[4] + ft_strlen(args[4]))
+		return (free(obj), 0);
 	obj->object.color = atocolor(args[5]);
+	if (!check_cylinder(&obj->object))
+		return (free(obj), 0);
+	obj->object.rotation = normalize(obj->object.rotation);
 	add_objects(&data->objects, obj);
 	return (1);
 }

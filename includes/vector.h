@@ -28,6 +28,7 @@ vec3	cross(const vec3 v1, const vec3 v2);
 
 vec3	normalize(const vec3 v);
 
+int	    atovec3(char *s, vec3 *v);
 vec3	atov3(char *s);
 
 #endif

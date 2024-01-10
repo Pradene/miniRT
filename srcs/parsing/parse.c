@@ -52,22 +52,19 @@ int	parsing(char *path)
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 	{
-		printf("Error: invald file\n");
-		return (1);
+		return (printf("Error: invald file\n"), 1);
 	}
 	file = read_file(fd);
 	if (!file)
 	{
-		printf("Error: couldn't read %s file\n", path);
 		close(fd);
-		return (1);
+		return (printf("Error: couldn't read %s file\n", path), 1);
 	}
 	if (create_objects(file))
 	{
-		printf("Error: couldn't parse %s file\n", path);
 		string_array_free(file);
 		close(fd);
-		return (1);
+		return (printf("Error: couldn't parse %s file\n", path), 1);
 	}
 	string_array_free(file);
 	close(fd);
