@@ -18,7 +18,7 @@
 
 # define WIDTH 1080
 # define HEIGHT 720
-# define ASPECT_RATIO (1080 / 720)
+# define ASPECT_RATIO ((float)1080 / (float)720)
 
 typedef struct s_camera
 {
