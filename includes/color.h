@@ -20,5 +20,6 @@ rgba	color(float r, float g, float b, float a);
 rgba	atocolor(char *s);
 
 int		colortoi(rgba c);
+rgba	itocolor(int c);
 
 #endif

@@ -23,6 +23,7 @@ int	key(int key, t_data *data)
 	quat	q;
 	bool	r;
 
+	data->frame = 0;
 	up = vector3(0, 1, 0);
 	forward = normalize(data->camera.direction);
 	right = normalize(cross(forward, up));

@@ -50,6 +50,7 @@ typedef struct s_data
 	void		*win;
 	float		et;
 	t_image		img;
+	int			frame;
 }	t_data;
 
 // Data

@@ -64,3 +64,14 @@ int	colortoi(rgba c)
 	| ((int)(c.g * 255) << 8) | ((int)(c.b * 255) << 0);
 	return (color);
 }
+
+rgba	itocolor(int c)
+{
+	rgba	color;
+
+	color.a = (float)((c >> 24) & 0xFF) / 255.0;
+	color.r = (float)((c >> 16) & 0xFF) / 255.0;
+	color.g = (float)((c >> 8) & 0xFF) / 255.0;
+	color.b = (float)((c >> 0) & 0xFF) / 255.0;
+	return (color);
+}

@@ -29,6 +29,7 @@ void	initialisation(void)
 	data->camera.created = 0;
 	data->light.created = 0;
 	data->alight.created = 0;
+	data->frame = 0;
 }
 
 int	free_data(void)
@@ -55,6 +56,7 @@ int	main(int ac, char **av)
 		printf("Error: You have to run the program with: ./minirt map.rt\n");
 		return (1);
 	}
+	srand(time(NULL));
 	initialisation();
 	if (parsing(av[1]))
 		return (1);
