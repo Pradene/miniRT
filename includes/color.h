@@ -13,13 +13,13 @@
 #ifndef COLOR_H
 # define COLOR_H
 
-typedef float	rgba __attribute__((ext_vector_type(4)));
+typedef float	t_rgba __attribute__((ext_vector_type(4)));
 
-rgba	color(float r, float g, float b, float a);
+t_rgba	color(float r, float g, float b, float a);
 
-rgba	atocolor(char *s);
+t_rgba	atocolor(char *s);
 
-int		colortoi(rgba c);
-rgba	itocolor(int c);
+int		colortoi(t_rgba c);
+t_rgba	itocolor(int c);
 
 #endif

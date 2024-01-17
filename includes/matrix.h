@@ -15,15 +15,19 @@
 
 # include "vector.h"
 
-typedef float	mat44 __attribute__((matrix_type(4, 4)));
-typedef float	mat33 __attribute__((matrix_type(3, 3)));
+typedef float	t_mat44 __attribute__((matrix_type(4, 4)));
+typedef float	t_mat33 __attribute__((matrix_type(3, 3)));
 
-mat44	mat(void);
-mat44	mat_copy(mat44 m);
-void	mat_print(mat44 m);
-vec4	mat_vec_product(mat44 m, vec4 v);
-mat44	mat_product(mat44 m, mat44 n);
+t_mat44	mat(void);
+t_mat44	mat_copy(t_mat44 m);
+void	mat_print(t_mat44 m);
+t_vec4	mat_vec_product(t_mat44 m, t_vec4 v);
+t_mat44	mat_product(t_mat44 m, t_mat44 n);
 
-mat44	mat_inverse(mat44 m);
+t_mat44	mat_inverse(t_mat44 m);
+
+float	mat3_determinant(t_mat33 m);
+float	cofactor(t_mat44 m, int r, int c);
+float	mat4_determinant(t_mat44 m);
 
 #endif

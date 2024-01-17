@@ -30,6 +30,7 @@ void	initialisation(void)
 	data->light.created = 0;
 	data->alight.created = 0;
 	data->frame = 0;
+	data->aspect_ratio = (float)WIDTH / (float)HEIGHT;
 }
 
 int	free_data(void)

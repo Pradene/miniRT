@@ -12,28 +12,25 @@
 
 #include "../../includes/rt.h"
 
-rgba	get_color(t_ray ray, t_hit *h)
+t_rgba	get_color(t_ray ray, t_hit *h)
 {
 	t_data	*data;
-	vec3	dir;
-	rgba	c;
+	t_vec3	dir;
+	t_rgba	c;
 	float	ratio;
 	float	d;
 
 	c = color(0, 0, 0, 1);
 	if (h->object == NULL)
 		return (c);
-	c = h->object->color;
 	data = get_data();
+	c = h->object->color;
 	ray.origin = h->w_position + h->normal * 0.0001;
 	ray.direction = -(ray.origin - data->light.origin);
 	ray.direction = normalize(ray.direction);
 	d = ray_hit(ray).distance;
-	if (d > 0)
-	{
-		c = h->object->color * data->alight.brightness;
-		return (c);
-	}
+	if (d != -1 && d < distance(data->light.origin, ray.origin))
+		return (h->object->color * data->alight.brightness);
 	dir = -1 * normalize(h->w_position - data->light.origin);
 	ratio = fmaxf(0.0, dot(h->normal, dir));
 	c = h->object->color * fminf(1.0, ratio + data->alight.brightness);
@@ -79,7 +76,7 @@ t_hit	ray_hit(t_ray r)
 	return (h);
 }
 
-rgba	intersect(t_ray r)
+t_rgba	intersect(t_ray r)
 {
 	t_hit		h;
 

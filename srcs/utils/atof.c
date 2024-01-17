@@ -16,8 +16,8 @@ float	ft_atof(char *s, char **end)
 {
 	float	f;
 	int		i;
+	int		j;
 	float	sign;
-	float	factor;
 
 	f = 0.0;
 	(*end) = s;
@@ -34,12 +34,9 @@ float	ft_atof(char *s, char **end)
 	(*end) = s + i;
 	if (s[i] != '.')
 		return (f * sign);
-	factor = 0.1;
+	j = i;
 	while (ft_isdigit(s[++i]))
-	{
-		f += (s[i] - '0') * factor;
-		factor /= 10;
-	}
+		f += (s[i] - '0') * (1.0 / (10.0 * ((float)i - (float)j)));
 	(*end) = s + i;
 	return (f * sign);
 }

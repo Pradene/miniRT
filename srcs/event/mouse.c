@@ -22,8 +22,6 @@ int	mouse(int button, int x, int y, t_data *data)
 	r.direction = data->camera.ray_direction[y * WIDTH + x];
 	h = ray_hit(r);
 	if (h.object)
-	{
 		return (0);
-	}
 	return (0);
 }

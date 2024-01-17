@@ -12,9 +12,9 @@
 
 #include "../../includes/rt.h"
 
-mat44	mat(void)
+t_mat44	mat(void)
 {
-	mat44	m;
+	t_mat44	m;
 	int		i;
 	int		j;
 
@@ -32,7 +32,7 @@ mat44	mat(void)
 	return (m);
 }
 
-void	mat_print(mat44 m)
+void	mat_print(t_mat44 m)
 {
 	int		i;
 	int		j;
@@ -48,9 +48,9 @@ void	mat_print(mat44 m)
 	printf("\n");
 }
 
-mat44	mat_copy(mat44 m)
+t_mat44	mat_copy(t_mat44 m)
 {
-	mat44	res;
+	t_mat44	res;
 	int		i;
 	int		j;
 
@@ -64,9 +64,9 @@ mat44	mat_copy(mat44 m)
 	return (res);
 }
 
-vec4	mat_vec_product(mat44 m, vec4 v)
+t_vec4	mat_vec_product(t_mat44 m, t_vec4 v)
 {
-	vec4	res;
+	t_vec4	res;
 
 	res.x = m[0][0] * v.x + m[0][1] * v.y + m[0][2] * v.z + m[0][3] * v.w;
 	res.y = m[1][0] * v.x + m[1][1] * v.y + m[1][2] * v.z + m[1][3] * v.w;
@@ -75,9 +75,9 @@ vec4	mat_vec_product(mat44 m, vec4 v)
 	return (res);
 }
 
-mat44	mat_product(mat44 m, mat44 n)
+t_mat44	mat_product(t_mat44 m, t_mat44 n)
 {
-	mat44	res;
+	t_mat44	res;
 	int		i;
 	int		j;
 	int		k;

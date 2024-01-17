@@ -12,11 +12,11 @@
 
 #include "../../includes/rt.h"
 
-vec4	discriminant(t_obj *obj, t_ray r)
+t_vec4	discriminant(t_obj *obj, t_ray r)
 {
-	vec4	result;
-	vec3	tmp1;
-	vec3	tmp2;
+	t_vec4	result;
+	t_vec3	tmp1;
+	t_vec3	tmp2;
 
 	tmp1 = r.direction - dot(r.direction, obj->rotation) * obj->rotation;
 	tmp2 = r.origin - obj->origin \
@@ -31,7 +31,7 @@ vec4	discriminant(t_obj *obj, t_ray r)
 t_hit	ray_cylinder_intersection(t_obj *obj, t_ray r)
 {
 	t_hit	h;
-	vec4	d;
+	t_vec4	d;
 	float	t;
 	t_obj	tmp;
 

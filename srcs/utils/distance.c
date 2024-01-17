@@ -12,7 +12,8 @@
 
 #include "../../includes/rt.h"
 
-float	distance(vec3 p1, vec3 p2)
+float	distance(t_vec3 p1, t_vec3 p2)
 {
-	return (2 * (p1.x * p2.x) + 2 * (p1.y * p2.y) + 2 * (p1.z * p2.z));
+	return (sqrt(powf(p2.x - p1.x, 2.0) + powf(p2.y - p1.y, 2.0) \
+	+ powf(p2.z - p1.z, 2.0)));
 }

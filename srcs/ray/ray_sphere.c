@@ -14,9 +14,9 @@
 
 t_hit	ray_sphere_intersection(t_obj *obj, t_ray r)
 {
-	vec4	d;
+	t_vec4	d;
 	t_hit	h;
-	vec3	tmp;
+	t_vec3	tmp;
 
 	tmp = r.origin - obj->origin;
 	d.x = dot(r.direction, r.direction);
@@ -25,10 +25,13 @@ t_hit	ray_sphere_intersection(t_obj *obj, t_ray r)
 	d.w = d.y * d.y - 4.0 * d.x * d.z;
 	if (d.w < 0.0)
 		return (miss_ray());
+	if ((-d.y + sqrt(d.w)) / (2.0 * d.x) < 0)
+		return (miss_ray());
 	h.distance = (-d.y - sqrt(d.w)) / (2.0 * d.x);
+	if (h.distance < 0)
+		h.distance = (-d.y + sqrt(d.w)) / (2.0 * d.x);
 	h.object = obj;
-	h.w_position = tmp + r.direction * h.distance;
-	h.normal = normalize(h.w_position);
-	h.w_position += obj->origin;
+	h.normal = normalize(tmp + r.direction * h.distance);
+	h.w_position = obj->origin + tmp + r.direction * h.distance;
 	return (h);
 }

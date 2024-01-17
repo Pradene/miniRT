@@ -13,18 +13,18 @@
 #include "../../includes/rt.h"
 
 // Init a vector
-vec2	vector2(float x, float y)
+t_vec2	vector2(float x, float y)
 {
-	vec2	v;
+	t_vec2	v;
 
 	v.x = x;
 	v.y = y;
 	return (v);
 }
 
-vec3	vector3(float x, float y, float z)
+t_vec3	vector3(float x, float y, float z)
 {
-	vec3	v;
+	t_vec3	v;
 
 	v.x = x;
 	v.y = y;
@@ -32,9 +32,9 @@ vec3	vector3(float x, float y, float z)
 	return (v);
 }
 
-vec4	vector4(float x, float y, float z, float w)
+t_vec4	vector4(float x, float y, float z, float w)
 {
-	vec4	v;
+	t_vec4	v;
 
 	v.x = x;
 	v.y = y;

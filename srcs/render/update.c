@@ -12,7 +12,7 @@
 
 #include "../../includes/rt.h"
 
-void	randomize(vec3 *v)
+void	randomize(t_vec3 *v)
 {
 	float	r;
 
@@ -40,8 +40,8 @@ void	trace(t_image *img, t_camera *cam)
 	int		i;
 	int		frame;
 	t_ray	ray;
-	rgba	color;
-	rgba	last;
+	t_rgba	color;
+	t_rgba	last;
 
 	i = -1;
 	frame = get_data()->frame;

@@ -12,6 +12,12 @@
 
 #include "../../includes/rt.h"
 
+static void	replace_newline(char **line)
+{
+	if ((*line)[ft_strlen(*line) - 1] == '\n')
+		(*line)[ft_strlen(*line) - 1] = '\0';
+}
+
 static char	**read_file(int fd)
 {
 	int		i;
@@ -27,8 +33,7 @@ static char	**read_file(int fd)
 	while (line)
 	{
 		tmp = NULL;
-		if (line[ft_strlen(line) - 1] == '\n')
-			line[ft_strlen(line) - 1] = '\0';
+		replace_newline(&line);
 		tmp = malloc(sizeof(char *) * ((++i + 1) + 1));
 		if (!tmp)
 			return (string_array_free(file), free(line), NULL);

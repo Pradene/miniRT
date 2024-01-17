@@ -16,7 +16,7 @@ t_hit	ray_plane_intersection(t_obj *obj, t_ray r)
 {
 	float	denom;
 	t_hit	h;
-	vec3	tmp;
+	t_vec3	tmp;
 
 	denom = dot(obj->rotation, r.direction);
 	if (fabsf(denom) > 0.0001)

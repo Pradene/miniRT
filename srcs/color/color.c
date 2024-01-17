@@ -12,9 +12,9 @@
 
 #include "../../includes/rt.h"
 
-rgba	color(float r, float g, float b, float a)
+t_rgba	color(float r, float g, float b, float a)
 {
-	rgba	c;
+	t_rgba	c;
 
 	c.r = r;
 	c.g = g;
@@ -23,9 +23,9 @@ rgba	color(float r, float g, float b, float a)
 	return (c);
 }
 
-rgba	atocolor(char *s)
+t_rgba	atocolor(char *s)
 {
-	rgba	c;
+	t_rgba	c;
 	float	f;
 	char	*tmp;
 	char	**colors;
@@ -51,8 +51,8 @@ rgba	atocolor(char *s)
 	return (c);
 }
 
-// transform a rgba struct into an integer color
-int	colortoi(rgba c)
+// transform a t_rgba struct into an integer color
+int	colortoi(t_rgba c)
 {
 	int	color;
 
@@ -65,9 +65,9 @@ int	colortoi(rgba c)
 	return (color);
 }
 
-rgba	itocolor(int c)
+t_rgba	itocolor(int c)
 {
-	rgba	color;
+	t_rgba	color;
 
 	color.a = (float)((c >> 24) & 0xFF) / 255.0;
 	color.r = (float)((c >> 16) & 0xFF) / 255.0;

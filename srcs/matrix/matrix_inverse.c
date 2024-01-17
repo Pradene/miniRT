@@ -12,53 +12,7 @@
 
 #include "../../includes/rt.h"
 
-float	mat3_determinant(mat33 m)
-{
-	return (m[0][0] * (m[1][1] * m[2][2] - m[2][1] * m[1][2]) \
-	- m[0][1] * (m[1][0] * m[2][2] - m[2][0] * m[1][2]) \
-	+ m[0][2] * (m[1][0] * m[2][1] - m[2][0] * m[1][1]));
-}
-
-float	cofactor(mat44 m, int r, int c)
-{
-	mat33	tmp;
-	int		i;
-	int		j;
-	int		row;
-	int		col;
-
-	row = -1;
-	i = 0;
-	j = 0;
-	while (++row < 4)
-	{
-		col = -1;
-		while (++col < 4)
-		{
-			if (row == r || col == c)
-				continue ;
-			tmp[i][j++] = m[row][col];
-			j = j % 3;
-			if (j == 0)
-				i++;
-		}
-	}
-	return (mat3_determinant(tmp));
-}
-
-float	mat4_determinant(mat44 m)
-{
-	int		i;
-	float	res;
-
-	res = 0;
-	i = -1;
-	while (++i < 4)
-		res += m[0][i] * powf(-1, i) * cofactor(m, 0, i);
-	return (res);
-}
-
-void	mat_adjugate(mat44 m, mat44 *tmp)
+void	mat_adjugate(t_mat44 m, t_mat44 *tmp)
 {
 	int	i;
 	int	j;
@@ -72,11 +26,11 @@ void	mat_adjugate(mat44 m, mat44 *tmp)
 	}
 }
 
-void	mat_transpose(mat44 *m)
+void	mat_transpose(t_mat44 *m)
 {
 	int		i;
 	int		j;
-	mat44	cp;
+	t_mat44	cp;
 
 	cp = mat_copy(*m);
 	i = -1;
@@ -88,13 +42,11 @@ void	mat_transpose(mat44 *m)
 	}
 }
 
-mat44	mat_inverse(mat44 m)
+t_mat44	mat_inverse(t_mat44 m)
 {
 	float	det;
-	mat44	tmp;
-	mat44	res;
-	int		i;
-	int		j;
+	t_mat44	tmp;
+	t_mat44	res;
 
 	tmp = mat();
 	res = mat();
@@ -103,12 +55,6 @@ mat44	mat_inverse(mat44 m)
 		return (res);
 	mat_adjugate(m, &tmp);
 	mat_transpose(&tmp);
-	i = -1;
-	while (++i < 4)
-	{
-		j = -1;
-		while (++j < 4)
-			res[i][j] = (float)1 / det * tmp[i][j];
-	}
+	res = 1.0 / det * tmp;
 	return (res);
 }

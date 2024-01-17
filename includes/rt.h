@@ -51,7 +51,15 @@ typedef struct s_data
 	float		et;
 	t_image		img;
 	int			frame;
+	float		aspect_ratio;
 }	t_data;
+
+int		camera(t_data *data, char **args);
+int		cylinder(t_data *data, char **args);
+int		plane(t_data *data, char **args);
+int		sphere(t_data *data, char **args);
+int		light(t_data *data, char **args);
+int		ambient_light(t_data *data, char **args);
 
 // Data
 t_data	*get_data(void);

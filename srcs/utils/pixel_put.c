@@ -12,7 +12,7 @@
 
 #include "../../includes/rt.h"
 
-void	pixel_put(t_image *img, int x, int y, rgba c)
+void	pixel_put(t_image *img, int x, int y, t_rgba c)
 {
 	char	*pixel;
 

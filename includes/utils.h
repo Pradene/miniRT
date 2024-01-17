@@ -18,7 +18,7 @@
 
 # include "mlx_utils.h"
 
-void	pixel_put(t_image *img, int x, int y, rgba c);
+void	pixel_put(t_image *img, int x, int y, t_rgba c);
 
 int		string_array_size(char **sa);
 void	string_array_free(char **sa);
@@ -26,9 +26,9 @@ void	string_array_copy(char **dest, char **src);
 
 float	ft_atof(char *s, char **end);
 
-float	map(float v, vec2 range, vec2 nrange);
+float	map(float v, t_vec2 range, t_vec2 nrange);
 
-float	distance(vec3 p1, vec3 p2);
+float	distance(t_vec3 p1, t_vec3 p2);
 
 float	clamp(float v, float min, float max);
 

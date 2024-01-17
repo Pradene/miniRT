@@ -12,9 +12,9 @@
 
 #include "../../includes/rt.h"
 
-vec3	atov3(char *s)
+t_vec3	atov3(char *s)
 {
-	vec3	v;
+	t_vec3	v;
 	char	*tmp;
 	char	**infos;
 
@@ -31,7 +31,7 @@ vec3	atov3(char *s)
 	return (v);
 }
 
-int	atovec3(char *s, vec3 *v)
+int	atovec3(char *s, t_vec3 *v)
 {
 	char	*tmp;
 	char	**infos;

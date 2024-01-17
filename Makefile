@@ -3,13 +3,22 @@ COLOR	= color.c
 EVENT	= key.c \
 		mouse.c
 
-matrix	= matrix_inverse.c \
+matrix	= matrix_determinant.c \
+		matrix_inverse.c \
 		matrix.c
 
-OBJECTS	= camera.c \
+OBJECTS	= ambient_light.c \
+		camera_rotation.c \
+		camera.c \
 		check.c \
+		cylinder.c \
+		light.c \
+		objects_utils.c \
 		objects.c \
-		print.c
+		plane.c \
+		print.c \
+		rays.c \
+		sphere.c
 
 PARSING	= parse.c
 
