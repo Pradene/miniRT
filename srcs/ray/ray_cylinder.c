@@ -28,40 +28,59 @@ t_vec4	discriminant(t_obj *obj, t_ray r)
 	return (result);
 }
 
+int	ray_curved_interscetion(t_obj *obj, t_hit h)
+{
+	t_vec3	v;
+
+	v = obj->rotation * obj->height / 2;
+	if (dot(obj->rotation, h.w_position - (obj->origin - v)) > 0 \
+	&& dot(obj->rotation, h.w_position - (obj->origin + v)) < 0)
+		return (1);
+	return (0);
+}
+
+int	ray_caps_intersection(t_obj obj, t_ray r, t_hit *h)
+{
+	t_vec3	half_h;
+	t_vec3	origin;
+
+	origin = obj.origin;
+	half_h = obj.rotation * obj.height / 2;
+	obj.origin = origin + half_h;
+	*h = ray_plane_intersection(&obj, r);
+	if (dot(h->w_position - obj.origin, h->w_position - obj.origin) \
+	< powf(obj.diameter / 2, 2.0))
+		return (1);
+	obj.origin = origin - half_h;
+	*h = ray_plane_intersection(&obj, r);
+	if (dot(h->w_position - obj.origin, h->w_position - obj.origin) \
+	< powf(obj.diameter / 2, 2.0))
+		return (1);
+	return (0);
+}
+
 t_hit	ray_cylinder_intersection(t_obj *obj, t_ray r)
 {
 	t_hit	h;
 	t_vec4	d;
 	float	t;
-	t_obj	tmp;
 
 	d = discriminant(obj, r);
 	if (d.w < 0)
 		return (miss_ray());
 	t = (-d.y - sqrt(d.w)) / (2.0 * d.x);
 	h.w_position = r.origin + r.direction * t;
-	if (dot(obj->rotation, h.w_position - (obj->origin - obj->rotation * obj->height / 2)) > 0 \
-	&& dot(obj->rotation, h.w_position - (obj->origin + obj->rotation * obj->height / 2)) < 0)
+	if (ray_curved_interscetion(obj, h))
 	{
 		h.w_position = r.origin + r.direction * t;
 		h.distance = t;
 		h.object = obj;
-		h.normal = dot(h.w_position - obj->origin, obj->rotation) * obj->rotation;
-		h.normal = h.w_position - obj->origin - h.normal;
-		h.normal = normalize(h.normal);
+		h.normal = dot(h.w_position - obj->origin, obj->rotation) \
+		* obj->rotation;
+		h.normal = normalize(h.w_position - obj->origin - h.normal);
 		return (h);
 	}
-	tmp = *obj;
-	tmp.origin = obj->origin + obj->rotation * obj->height / 2;
-	h = ray_plane_intersection(&tmp, r);
-	if (dot(h.w_position - tmp.origin, h.w_position - tmp.origin) < powf(obj->diameter / 2, 2.0))
-	{
-		h.object = obj;
-		return (h);
-	}
-	tmp.origin = obj->origin - obj->rotation * obj->height / 2;
-	h = ray_plane_intersection(&tmp, r);
-	if (dot(h.w_position - tmp.origin, h.w_position - tmp.origin) < powf(obj->diameter / 2, 2.0))
+	if (ray_caps_intersection(*obj, r, &h))
 	{
 		h.object = obj;
 		return (h);
