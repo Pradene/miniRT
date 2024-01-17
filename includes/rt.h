@@ -54,6 +54,7 @@ typedef struct s_data
 	float		aspect_ratio;
 }	t_data;
 
+// Objects
 int		camera(t_data *data, char **args);
 int		cylinder(t_data *data, char **args);
 int		plane(t_data *data, char **args);
