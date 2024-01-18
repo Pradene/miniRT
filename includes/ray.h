@@ -26,9 +26,14 @@ t_hit	miss_ray(void);
 
 t_hit	ray_plane_intersection(t_obj *obj, t_ray r);
 t_hit	ray_sphere_intersection(t_obj *obj, t_ray r);
+
+t_hit	ray_caps_intersection(t_obj *obj, t_ray r);
+t_hit	ray_curves_intersection(t_obj *obj, t_ray r);
 t_hit	ray_cylinder_intersection(t_obj *obj, t_ray r);
 
 t_rgba	intersect(t_ray r);
 t_hit	ray_hit(t_ray r);
+
+float	closest_distance(t_vec4 d);
 
 #endif

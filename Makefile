@@ -23,9 +23,11 @@ OBJECTS	= ambient_light.c \
 PARSING	= parse.c
 
 RAY		= intersect.c \
+		ray_cylinder_utils.c \
 		ray_cylinder.c \
 		ray_plane.c \
-		ray_sphere.c 
+		ray_sphere.c \
+		utils.c
 
 RENDER	= render.c \
 		renderer.c \

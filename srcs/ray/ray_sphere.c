@@ -27,11 +27,11 @@ t_hit	ray_sphere_intersection(t_obj *obj, t_ray r)
 		return (miss_ray());
 	if ((-d.y + sqrt(d.w)) / (2.0 * d.x) < 0)
 		return (miss_ray());
-	h.distance = (-d.y - sqrt(d.w)) / (2.0 * d.x);
-	if (h.distance < 0)
-		h.distance = (-d.y + sqrt(d.w)) / (2.0 * d.x);
+	h.distance = closest_distance(d);
 	h.object = obj;
 	h.normal = normalize(tmp + r.direction * h.distance);
+	if ((-d.y - sqrt(d.w)) / (2.0 * d.x) < 0)
+		h.normal *= -1;
 	h.w_position = obj->origin + tmp + r.direction * h.distance;
 	return (h);
 }
