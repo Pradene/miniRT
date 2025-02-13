@@ -64,26 +64,32 @@ OBJS	= $(SRCS:.c=.o)
 
 CC		= cc
 
-CFLAGS	= -std=c99 -Wall -Wextra -Werror -g -fenable-matrix
+CFLAGS	= -std=c99 -Wall -Wextra -Werror -g -Imlx_linux
 
 NAME	= minirt
 
 .SILENT:
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I/usr/include -Imlx_linux -O3 -c $< -o $@
+	$(CC) $(CFLAGS) -I/usr/include -O3 -c $< -o $@
 
-all: | lft	$(NAME)
+all: | lft mlx $(NAME)  # Add "mlx" to dependencies
 
+# Compile MLX library
+mlx:
+	make -C mlx_linux
+
+# Compile Libft
 lft:
 	make -C libft
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -o $(NAME) -L./libft -lft
+	$(CC) $(CFLAGS) $(OBJS) -L./mlx_linux -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME) -L./libft -lft
 
 clean:
 	rm -rf $(OBJS)
 	make -C libft clean
+	make -C mlx_linux clean  # Clean MLX
 
 fclean:	clean
 	rm -rf $(NAME)
