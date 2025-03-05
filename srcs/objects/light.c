@@ -1,40 +1,36 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   light.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/17 17:07:15 by lpradene          #+#    #+#             */
-/*   Updated: 2024/01/17 17:07:16 by lpradene         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "minirt.h"
 
-#include "../../includes/rt.h"
-
-int	check_light(t_light light)
-{
-	if (!check_color(light.color) || !check_brightness(light.brightness))
-		return (0);
-	return (1);
-}
-
-int	light(t_data *data, char **args)
-{
+int	light(Scene *scene, char **args) {
 	char	*tmp;
+	Light	*light;
 
-	if (string_array_size(args) != 4)
+	if (size_strings(args) != 4) {
 		return (0);
-	if (data->light.created)
+    }
+
+	if (scene->light) {
 		return (0);
-	if (!atovec3(args[1], &data->light.origin))
+    }
+
+    light = malloc(sizeof(Light));
+    if (!light) {
+        return (0);
+    }
+
+	if (!atopoint(args[1], &light->origin)) {
 		return (0);
-	data->light.brightness = ft_atof(args[2], &tmp);
-	if (tmp != args[2] + ft_strlen(args[2]))
+    }
+
+	light->intensity = ft_atof(args[2], &tmp);
+	if (tmp != args[2] + ft_strlen(args[2])) {
 		return (0);
-	data->light.color = atocolor(args[3]);
-	data->light.created = 1;
-	if (!check_light(data->light))
+    }
+
+	light->color = atocolor(args[3]);
+    if (!check_light(*light)) {
 		return (0);
+    }
+
+	scene->light = light;
 	return (1);
 }

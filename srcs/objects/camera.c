@@ -1,106 +1,123 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   camera.c                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/10 11:46:41 by lpradene          #+#    #+#             */
-/*   Updated: 2024/01/10 12:06:27 by lpradene         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "minirt.h"
 
-#include "../../includes/rt.h"
-
-void	view_matrix(t_camera *cam, t_vec3 forward)
-{
-	t_vec3	right;
-	t_vec3	up;
-
-	up = vector3(0, 1, 0);
-	forward = normalize(forward);
-	right = normalize(cross(forward, up));
-	up = normalize(cross(right, forward));
-	cam->m_view[0][0] = right.x;
-	cam->m_view[0][1] = up.x;
-	cam->m_view[0][2] = forward.x;
-	cam->m_view[0][3] = 0;
-	cam->m_view[1][0] = right.y;
-	cam->m_view[1][1] = up.y;
-	cam->m_view[1][2] = forward.y;
-	cam->m_view[1][3] = 0;
-	cam->m_view[2][0] = right.z;
-	cam->m_view[2][1] = up.z;
-	cam->m_view[2][2] = forward.z;
-	cam->m_view[2][3] = 0;
-	cam->m_view[3][0] = -dot(cam->origin, right);
-	cam->m_view[3][1] = -dot(cam->origin, up);
-	cam->m_view[3][2] = -dot(cam->origin, forward);
-	cam->m_view[3][3] = 1;
+void	view_matrix(Camera *camera, Vector direction) {
+	camera->up = vector(0, 1, 0);
+	camera->direction = normalize(direction);
+	camera->right = normalize(cross(camera->direction, camera->up));
+	camera->up = normalize(cross(camera->right, camera->direction));
+	
+	camera->view[0][0] = camera->right.x;
+	camera->view[0][1] = camera->up.x;
+	camera->view[0][2] = camera->direction.x;
+	camera->view[0][3] = 0;
+	camera->view[1][0] = camera->right.y;
+	camera->view[1][1] = camera->up.y;
+	camera->view[1][2] = camera->direction.y;
+	camera->view[1][3] = 0;
+	camera->view[2][0] = camera->right.z;
+	camera->view[2][1] = camera->up.z;
+	camera->view[2][2] = camera->direction.z;
+	camera->view[2][3] = 0;
+	camera->view[3][0] = -dot(camera->origin, camera->right);
+	camera->view[3][1] = -dot(camera->origin, camera->up);
+	camera->view[3][2] = -dot(camera->origin, camera->direction);
+	camera->view[3][3] = 1;
 }
 
-void	calculate_m_view(t_camera *cam)
-{
-	view_matrix(cam, cam->direction);
-	cam->m_inverse_view = mat_inverse(cam->m_view);
-}
+void	projection_matrix(Camera *camera, int near, int far, int fov) {
+	Scene	*scene;
 
-void	projection_matrix(t_camera *cam, int near, int far, int fov)
-{
-	t_data	*data;
-
-	data = get_data();
-	if (!data)
+	scene = get_scene();
+	if (!scene) {
 		return ;
-	cam->m_projection[0][0] = 1.0 / (data->aspect_ratio * tan(radian(fov / 2)));
-	cam->m_projection[0][1] = 0.0;
-	cam->m_projection[0][2] = 0.0;
-	cam->m_projection[0][3] = 0.0;
-	cam->m_projection[1][0] = 0.0;
-	cam->m_projection[1][1] = 1.0 / tan(radian(fov / 2));
-	cam->m_projection[1][2] = 0.0;
-	cam->m_projection[1][3] = 0.0;
-	cam->m_projection[2][0] = 0.0;
-	cam->m_projection[2][1] = 0.0;
-	cam->m_projection[2][2] = -(far + near) / (far - near);
-	cam->m_projection[2][3] = -1.0;
-	cam->m_projection[3][0] = 0.0;
-	cam->m_projection[3][1] = 0.0;
-	cam->m_projection[3][2] = -(2 * far * near) / (far - near);
-	cam->m_projection[3][3] = 0.0;
+    }
+
+	camera->proj[0][0] = 1.0 / (WIDTH / HEIGHT * tan(radian(fov / 2)));
+	camera->proj[0][1] = 0.0;
+	camera->proj[0][2] = 0.0;
+	camera->proj[0][3] = 0.0;
+	camera->proj[1][0] = 0.0;
+	camera->proj[1][1] = 1.0 / tan(radian(fov / 2));
+	camera->proj[1][2] = 0.0;
+	camera->proj[1][3] = 0.0;
+	camera->proj[2][0] = 0.0;
+	camera->proj[2][1] = 0.0;
+	camera->proj[2][2] = -(far + near) / (far - near);
+	camera->proj[2][3] = -1.0;
+	camera->proj[3][0] = 0.0;
+	camera->proj[3][1] = 0.0;
+	camera->proj[3][2] = -(2 * far * near) / (far - near);
+	camera->proj[3][3] = 0.0;
 }
 
-int	check_camera(t_camera *camera)
-{
-	if (!check_irange(camera->fov, 0, 180) \
-	|| !check_rotation(camera->direction))
+void	calculate_rays(Camera *camera) {
+	int		i;
+	float	x;
+	float	y;
+	Vector	tmp;
+	Vector	r;
+
+	i = -1;
+	while (++i < HEIGHT * WIDTH) {
+		x = map(i % WIDTH + 0.5, 0, WIDTH, -1, 1);
+		y = map(i / WIDTH + 0.5, 0, HEIGHT, -1, 1);
+		tmp = mat_vec_product(camera->iproj, point(x, y, 1));
+		r = normalize(tmp / tmp.w);
+		tmp = mat_vec_product(camera->iview, r);
+
+		camera->ray_direction[i] = tmp;
+	}
+}
+
+int	camera(Scene *scene, char **args) {
+	Camera	*camera;
+	char	*tmp;
+
+    camera = NULL;
+	if (size_strings(args) != 4) {
 		return (0);
+    }
+
+	if (scene->camera) {
+        return (0);
+    }
+
+    camera = malloc(sizeof(Camera));
+    if (!camera) {
+        return (0);
+    }
+
+	if (!atopoint(args[1], &camera->origin)) {
+        free(camera);
+        return (0);
+    }
+    
+	if (!atovector(args[2], &camera->direction)) {
+        free(camera);
+        return (0);
+    }
+
+	camera->direction = normalize(camera->direction);
+	camera->fov = ft_atof(args[3], &tmp);
+    camera->near = 1;
+    camera->far = 100;
+	camera->pitch = 0.;
+	camera->yaw = 0.;
+    
+    projection_matrix(camera, camera->near, camera->far, camera->fov);
+	view_matrix(camera, camera->direction);
+
+	camera->iview = mat_inverse(camera->view);
+	camera->iproj = mat_inverse(camera->proj);
+
+    if (!check_camera(camera)) {
+        free(camera);
+		return (0);
+    }
+
+	calculate_rays(camera);
+
+    scene->camera = camera;
 	return (1);
 }
 
-int	camera(t_data *data, char **args)
-{
-	t_camera	*cam;
-	char		*tmp;
-
-	cam = &data->camera;
-	if (string_array_size(args) != 4)
-		return (0);
-	if (data->camera.created)
-		return (0);
-	cam->origin = atov3(args[1]);
-	cam->direction = atov3(args[2]);
-	cam->direction = normalize(cam->direction);
-	cam->fov = (int)ft_atof(args[3], &tmp);
-	cam->created = 1;
-	cam->m_view = mat();
-	cam->m_inverse_view = mat();
-	cam->m_projection = mat();
-	cam->m_inverse_projection = mat();
-	calculate_m_view(cam);
-	projection_matrix(cam, 1, 100, cam->fov);
-	cam->m_inverse_projection = mat_inverse(cam->m_projection);
-	if (!check_camera(cam))
-		return (0);
-	return (1);
-}

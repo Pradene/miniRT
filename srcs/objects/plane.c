@@ -1,42 +1,61 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   plane.c                                            :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lpradene <marvin@42.fr>                    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/01/17 17:01:57 by lpradene          #+#    #+#             */
-/*   Updated: 2024/01/17 17:01:58 by lpradene         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "minirt.h"
 
-#include "../../includes/rt.h"
+Hit	plane_intersection(Object *obj, Ray r) {
+	float	denom;
+	Hit 	h;
+	Vector	tmp;
 
-int	check_plane(t_obj *obj)
-{
-	if (!check_color(obj->color) || !check_rotation(obj->rotation))
-		return (0);
-	return (1);
+	denom = dot(obj->rotation, r.direction);
+	if (fabsf(denom) > 0.0001) {
+		tmp = obj->origin - r.origin;
+		h.object = obj;
+		h.distance = dot(tmp, obj->rotation) / denom;
+		h.position = r.origin + r.direction * h.distance;
+		h.normal = obj->rotation;
+		if (denom > 0.0001) {
+			h.normal *= -1;
+        }
+
+		return (h);
+	}
+
+	return (miss_ray());
 }
 
-int	plane(t_data *data, char **args)
-{
-	t_obj_list	*obj;
+int	plane(Scene *scene, char **args) {
+	Object	*object;
 
-	if (string_array_size(args) != 4)
+	if (size_strings(args) != 4) {
 		return (0);
-	obj = malloc(sizeof(t_obj_list));
-	if (!obj)
+    }
+
+	object = malloc(sizeof(Object));
+	if (!object) {
 		return (0);
-	obj->object.type = PLANE;
-	if (!atovec3(args[1], &obj->object.origin))
-		return (free(obj), 0);
-	if (!atovec3(args[2], &obj->object.rotation))
-		return (free(obj), 0);
-	obj->object.color = atocolor(args[3]);
-	if (!check_plane(&obj->object))
-		return (free(obj), 0);
-	obj->object.rotation = normalize(obj->object.rotation);
-	add_objects(&data->objects, obj);
+    }
+
+	object->type = PLANE;
+	if (!atopoint(args[1], &object->origin)) {
+		free(object);
+        return (0);
+    }
+
+	if (!atovector(args[2], &object->rotation)) {
+		free(object);
+        return (0);
+    }
+    object->rotation = normalize(object->rotation);
+
+	object->material.color = atocolor(args[3]);
+	if (!check_plane(object)) {
+		free(object);
+        return (0);
+    }
+
+	if (add_object(scene, object)) {
+		free_scene();
+		return (0);
+	}
+
 	return (1);
 }

@@ -1,100 +1,64 @@
-COLOR	= color.c
+RAY		= intersect.c 
 
-EVENT	= key.c \
-		mouse.c
+OBJECTS = \
+	ambient.c \
+	camera.c \
+	check.c \
+	cylinder.c \
+	light.c \
+	objects.c \
+	plane.c \
+	sphere.c \
 
-matrix	= matrix_determinant.c \
-		matrix_inverse.c \
-		matrix.c
-
-OBJECTS	= ambient_light.c \
-		camera_rotation.c \
-		camera.c \
-		check.c \
-		cylinder.c \
-		light.c \
-		objects_utils.c \
-		objects.c \
-		plane.c \
-		print.c \
-		rays.c \
-		sphere.c
-
-PARSING	= parse.c
-
-RAY		= intersect.c \
-		ray_cylinder_utils.c \
-		ray_cylinder.c \
-		ray_plane.c \
-		ray_sphere.c \
-		utils.c
-
-RENDER	= render.c \
-		renderer.c \
-		update.c
-
-UTILS	= atof.c \
-		clamp.c \
-		distance.c \
-		map.c \
-		pixel_put.c \
-		radian.c \
-		string_array.c
-
-VECTOR	= atov3.c \
-		cross.c \
-		dot.c \
-		normalize.c \
-		vector.c
-
-FILES	+= $(addprefix color/, $(COLOR))
-FILES	+= $(addprefix event/, $(EVENT))
-FILES	+= $(addprefix matrix/, $(matrix))
-FILES	+= $(addprefix objects/, $(OBJECTS))
-FILES	+= $(addprefix parsing/, $(PARSING))
 FILES	+= $(addprefix ray/, $(RAY))
-FILES	+= $(addprefix render/, $(RENDER))
-FILES	+= $(addprefix utils/, $(UTILS))
-FILES	+= $(addprefix vector/, $(VECTOR))
-FILES	+= main.c
+FILES	+= $(addprefix objects/, $(OBJECTS))
+FILES	+= \
+	color.c \
+	event.c \
+	main.c \
+	matrix.c \
+	parsing.c \
+	point.c \
+	render.c \
+	scene.c \
+	utils.c \
+	vector.c \
 
 SRCS	= $(addprefix srcs/, $(FILES))
-
-OBJS	= $(SRCS:.c=.o)
+OBJS	= $(SRCS:srcs/%.c=objs/%.o)
+OBJDIR	= objs
 
 CC		= cc
-
-CFLAGS	= -std=c99 -Wall -Wextra -Werror -g -Imlx_linux
-
+CFLAGS	= -std=c99 -Wall -Wextra -Werror -g -fenable-matrix -Ilibs/mlx_linux -Ilibs/libft -Iincludes
 NAME	= minirt
 
 .SILENT:
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I/usr/include -O3 -c $< -o $@
+all: | lft mlx $(NAME)
 
-all: | lft mlx $(NAME)  # Add "mlx" to dependencies
-
-# Compile MLX library
 mlx:
-	make -C mlx_linux
+	make -C libs/mlx_linux
 
-# Compile Libft
 lft:
-	make -C libft
+	make -C libs/libft
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L./mlx_linux -lmlx -L/usr/lib -lXext -lX11 -lm -lz -o $(NAME) -L./libft -lft
+	$(CC) $(CFLAGS) $(OBJS) -L./libs/mlx_linux -lmlx -L./libs/libft -lft -L/usr/lib -lXext -lX11 -lm -lz -fenable-matrix -o $(NAME)
+
+# Fixed compilation rule
+objs/%.o: srcs/%.c
+	@mkdir -p $(@D)
+	$(CC) $(CFLAGS) -I/usr/include -O3 -c $< -o $@
 
 clean:
-	rm -rf $(OBJS)
-	make -C libft clean
-	make -C mlx_linux clean  # Clean MLX
+	rm -rf $(OBJDIR)
+	make -C libs/libft clean
+	make -C libs/mlx_linux clean
 
-fclean:	clean
-	rm -rf $(NAME)
-	make -C libft fclean
+fclean: clean
+	rm -f $(NAME)
+	make -C libs/libft fclean
 
-re:	fclean all
+re: fclean all
 
 .PHONY: re fclean clean all
