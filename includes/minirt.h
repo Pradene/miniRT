@@ -59,13 +59,11 @@ typedef enum ObjectType {
 
 typedef struct Camera {
 	Point	origin;
-	Vector	direction;
-	Vector	up;
-	Vector	right;
 
 	float	fov;
 	float	near;
 	float	far;
+
     Matrix4  proj;
     Matrix4  iproj;
     Matrix4  view;
@@ -218,9 +216,10 @@ float	mat_determinant(Matrix4 m);
 
 int		key(int key, Scene *scene);
 
-void	view_matrix(Camera *camera, Vector direction);
-void	projection_matrix(Camera *camera, int near, int far, int fov);
+Matrix4	view_matrix(Point from, Point to, Vector up);
+Matrix4	projection_matrix(int near, int far, int fov);
 
 void	calculate_rays(Camera *camera);
+Vector	direction(Camera *camera);
 
 #endif

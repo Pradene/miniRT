@@ -30,7 +30,7 @@ int	check_rotation(Vector direction) {
 }
 
 int	check_camera(Camera *camera) {
-	return (check_frange(camera->fov, 0.0f, 180.0f) && check_rotation(camera->direction));
+	return (check_frange(camera->fov, 0.0f, 180.0f) && check_rotation(direction(camera)));
 }
 
 int	check_intensity(float intensity) {
