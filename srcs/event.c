@@ -15,10 +15,6 @@
 #define R_UP 119
 #define R_DOWN 115
 
-Matrix4 rotate_x() {
-    
-}
-
 int rotate(Scene *scene, int key) {
     Camera *camera = scene->camera;
 

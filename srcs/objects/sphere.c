@@ -21,7 +21,6 @@ Hit	sphere_intersection(Object *object, Ray r) {
 		return (miss_ray());
     }
 
-	
 	h.distance = (-b - sqrt(d)) / (2.0 * a);
 	if (h.distance < 0) {
 		h.distance = (-b + sqrt(d)) / (2.0 * a);

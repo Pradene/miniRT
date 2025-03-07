@@ -153,11 +153,16 @@ Hit	    sphere_intersection(Object *obj, Ray r);
 Hit	    cylinder_intersection(Object *obj, Ray r);
 
 int	    sphere(Scene *scene, char **args);
-int	    camera(Scene *scene, char **args);
 int	    ambient(Scene *scene, char **args);
 int	    light(Scene *scene, char **args);
 int		cylinder(Scene *scene, char **args);
 int		plane(Scene *scene, char **args);
+
+int	    camera(Scene *scene, char **args);
+Matrix4	view_matrix(Point from, Point to, Vector up);
+Matrix4	projection_matrix(int near, int far, int fov);
+void	calculate_rays(Camera *camera);
+Vector	direction(Camera *camera);
 
 void    free_strings(char **strings);
 void	copy_strings(char **dest, char **src);
@@ -215,11 +220,5 @@ float	cofactor(Matrix4 m, int r, int c);
 float	mat_determinant(Matrix4 m);
 
 int		key(int key, Scene *scene);
-
-Matrix4	view_matrix(Point from, Point to, Vector up);
-Matrix4	projection_matrix(int near, int far, int fov);
-
-void	calculate_rays(Camera *camera);
-Vector	direction(Camera *camera);
 
 #endif
